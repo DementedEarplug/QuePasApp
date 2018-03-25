@@ -10,8 +10,17 @@ def home():
 '''User Routes'''
 @app.route('/QuePasApp/users')
 def users():
+    if request.args:
+        return UserHandler().searchUserByName(request.args)
+    else:
+        handler = UserHandler()
+        return handler.getAllUsers()
+
+@app.route('/QuePasApp/users/<int:IdUser>')
+def getUserById(IdUser):
     handler = UserHandler()
-    return handler.getAllUsers()
+    return handler.getUserbyId(IdUser)
+
 
 if __name__ == '__index__' :
     app.run()

@@ -30,5 +30,12 @@ class UserDAO:
 
     #need to add one to get contacts
 
-    ##def searchByName(self, id)
+    def searchByName(self, name):
+        result = []
+        for r in self.data:
+            if name == r[1]:
+                result.append(r)
+        return result
+
+
         

@@ -12,11 +12,11 @@ class ChatDAO:
                 result = g
         return result
     def getGroupsByUserID(self, userID):
-        result = []
+        result = {}
         for g in self.data:
             if g['userID']==userID:
-                result.append(g)
-        return result
+                result[g['id']]=g
+        return jsonify(result)
 
     def addGroup(self, id, name, userID):
         group1={'id':id,'name':name,'userID':userID}
@@ -28,8 +28,10 @@ class ChatDAO:
         return group1
 
     def getGroups(self):
-        print(self.data)
-        return self.data
+        result = {}
+        for g in self.data:
+           result[g['id']]=g
+        return result
 
     def changeGroupName(self, id, name):
         group = self.getGroupByID(id)

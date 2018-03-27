@@ -38,5 +38,5 @@ class UserHandler:
         mapped_result = []
         for r in result:
             mapped_result.append(self.mapToDict(r))
-        return jsonify(Part=mapped_result)
+        return jsonify(User=mapped_result)
     

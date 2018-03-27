@@ -21,7 +21,7 @@ api.add_resource(GroupByUserHandler, '/QuePasApp/groups/user/<int:userID>')
 #============================#
 
 #Returns all messages available in the group
-api.add_resource(MessageHandler, '/QuePasApp/groups/messages')
+api.add_resource(MessageHandler, '/QuePasApp/groups/<string:gName>/messages')
 
 #Returns a specific message by using its id
 api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')

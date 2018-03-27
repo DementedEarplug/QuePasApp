@@ -7,18 +7,28 @@ from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupB
 app = Flask(__name__)
 api = Api(app)
 
+#============================#
+#          Chat API          #
+#============================#
 
-#chat api 
-api.add_resource(GroupHandler, '/api/groups')
-api.add_resource(GroupByIndexHandler,'/api/groups/<int:id>')
-api.add_resource(GroupByUserHandler, '/api/groups/user/<int:userID>')
+api.add_resource(GroupHandler, '/QuePasApp/groups')
+api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>')
+api.add_resource(GroupByUserHandler, '/QuePasApp/groups/user/<int:userID>')
 #Try to follow this format ^^ (It's more compact and legible, and i believe it's easier too)
+
+#============================#
+#        Message API         #
+#============================#
+
+api.add_resource(MessageHandler, '/QuePasApp/groups/messages')
+api.add_resource(MessageByIdHandler, '/QuePasApp/groups/messages/<int:id>')
+api.add_resource(MessageReaction, '/QuePasApp/groups/messages/<int:id>')
 
 @app.route('/')
 def home():
     return "The beginning"
 
-@app.route('/api/users')
+@app.route('/QuePasApp/users')
 def users():
     if request.args:
         return UserHandler().searchUserByName(request.args)
@@ -26,7 +36,7 @@ def users():
         handler = UserHandler()
         return handler.getAllUsers()
 
-@app.route('/api/users/<int:IdUser>')
+@app.route('/QuePasApp/users/<int:IdUser>')
 def getUserById(IdUser):
     handler = UserHandler()
     return handler.getUserbyId(IdUser)

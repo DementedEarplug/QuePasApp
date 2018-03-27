@@ -5,58 +5,58 @@ from dao.message_dao import MessagesDAO
 from test.support import resource
 
 #Construct DAO Instance
-#dao = MessageDAO()
-
+dao = MessagesDAO()
 
 #Contains implementation related to all message handling operations of the application
 
 class MessageHandler(Resource):
-    def get(self):
-        result = dao.getAllMessages(Resource.args().get('gName'))
+    def get(self, gName):
+        result = dao.getAllMessages(gName)
         if (result != None):
             return jsonify(Messages=result)
         return jsonify(Error="MESSAGES NOT FOUND"), 404
     
 class MessageByIdHandler(Resource):
-    arguments = Resource.args()
-    
-    def get(self):
-        arguments = Resource.args()
-        result = dao.getMessage(arguments.get('gName'), arguments.get('id'))
+    def get(self, gName, id):
+        result = dao.getMessage(gName, id)
         if(result != None):
             return jsonify(Messages=result)
         return jsonify(Error="MESSAGE NOT FOUND"), 404
     
 class MessageReactionHandler(Resource):
-    arguments = Resource.args()
-    
-    def put(self):
-        message = dao.getMessage(arguments.get('gName'), arguments.get('id'))
+    def put(self, gName, id):
+        message = dao.getMessage(gName, id)
         if(message != None):
-            message.setReaction(Resource.args().get('reaction'))
+            parser = reqparse.RequestParser()
+            parser.add_argument('reaction', type=str, location = 'args')
+            args = parser.parse_args(strict=True)
+            message['reaction'] = args['reaction']
             return jsonify(Messages=message)
         else:
             return jsonify(Error="INTERNAL SERVER ERROR"), 500
     
 class MessageSearchHandler(Resource):
-    arguments = Resource.args()
-    containsText = []
-    def get(self):
-        messages = dao.getAllMessages(Resource.args().get('gName'))
-        for m in messages:
-            if m[1] == arguments.get('text'):
-                containsText.append(m)
-        if(containsText):
-            return jsonify(Messages=containsText)
-        return jsonify(Result="TEXT NOT FOUND"), 204
+    
+    def get(self, gName, text):
+        containsText = []
+        messages = dao.getAllMessages(gName)
+        if(messages != None):
+            for m in messages:
+                if m['content'] == text:
+                    containsText.append(m)
+            if(containsText):
+                return jsonify(Messages=containsText)
+            return jsonify(Error="TEXT NOT FOUND"), 204
+        return jsonify(Error="INTERNAL SERVER ERROR"), 500
     
 class MessagePostHandler(Resource):
-    arguments = Resource.args()
-    def get(self):
-        post = dao.postMessage(arguments.get('gName'), arguments.get('text'), 
-                                 arguments.get('writerID'))
-        if (post):
+    def post(self, gName):
+        parser = reqparse.RequestParser()
+        parser.add_argument('text', type=str, location = 'args')
+        parser.add_argument('writerID', type=int, location = 'args')
+        args = parser.parse_args(strict=True)
+        post = dao.postMessage(gName, args['text'], args['writerID'])
+        if (post != None):
             return jsonify(Messages=post)
         return jsonify(Error="UNABLE TO POST MESSAGE"), 404
-    Resource
     

@@ -3,6 +3,8 @@ from flask_restful import Resource, Api, reqparse
 from handler.user_handler import UserHandler
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByUserHandler
+from dao.message_dao import MessagesDAO
+from handler.message_handler import MessageHandler, MessageByIdHandler, MessageReactionHandler, MessageSearchHandler, MessagePostHandler
 
 app = Flask(__name__)
 api = Api(app)

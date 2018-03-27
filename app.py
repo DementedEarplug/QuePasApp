@@ -20,9 +20,20 @@ api.add_resource(GroupByUserHandler, '/QuePasApp/groups/user/<int:userID>')
 #        Message API         #
 #============================#
 
+#Returns all messages available in the group
 api.add_resource(MessageHandler, '/QuePasApp/groups/messages')
-api.add_resource(MessageByIdHandler, '/QuePasApp/groups/messages/<int:id>')
-api.add_resource(MessageReaction, '/QuePasApp/groups/messages/<int:id>')
+
+#Returns a specific message by using its id
+api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')
+
+#Adds a reaction to the message that corresponds to the Id
+api.add_resource(MessageReactionHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')
+
+#Searches for a message that contains the text specified
+api.add_resource(MessageSearchHandler, '/QuePasApp/groups/<string:gName>/messages/<string:text>')
+
+#Posts a new message into group
+api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/post')
 
 @app.route('/')
 def home():

@@ -1,5 +1,5 @@
-from group_chat_dao import ChatDAO
-from user_dao import UserDAO
+from dao.group_chat_dao import ChatDAO
+from dao.user_dao import UserDAO
 class ParticipantsDao():
     def __init__(self):
         chatDAO = ChatDAO()

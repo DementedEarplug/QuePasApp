@@ -1,5 +1,5 @@
 from flask import jsonify
-from user_dao import UserDAO
+from dao.user_dao import UserDAO
 class ChatDAO:
     def __init__(self):
         self.udao = UserDAO()

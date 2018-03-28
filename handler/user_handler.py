@@ -61,7 +61,7 @@ class UserHandler(Resource):
 		result = dao.getAllUsers()
 		mapped_result = []
 		for r in result:
-			mapped_result.append(mapToDict(r))
+			mapped_result.append(dao.mapUserToDict(r))
 		return jsonify(User = mapped_result)
 
 class UserByIdHandler(Resource):
@@ -70,7 +70,7 @@ class UserByIdHandler(Resource):
 		if result == None:
 			return jsonify(Error="NOT FOUND"), 404
 		else:
-			mapped = mapToDict(result)
+			mapped = dao.mapUserToDict(result)
 			return jsonify(User = mapped)
 
 class UserByNameHandler(Resource):
@@ -78,8 +78,9 @@ class UserByNameHandler(Resource):
         user = dao.searchByName(uFirstName)
         mapped = []
         for r in user:
-
-            mapped.append(mapToDict(r))
+            user = dao.mapUserToDict(r)
+            mapped.append(user)
         return jsonify(User = mapped)
 
     
+#UserContactsHandler

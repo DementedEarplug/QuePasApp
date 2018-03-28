@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler
 from dao.group_chat_dao import ChatDAO
-from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByUserHandler
+from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByUserHandler, GroupParticipantsHandler, GroupOwnerHandler
 from dao.message_dao import MessagesDAO
 from handler.message_handler import MessageHandler, MessageByIdHandler, MessageReactionHandler, MessageSearchHandler, MessagePostHandler
 
@@ -14,9 +14,15 @@ api = Api(app)
 #============================#
 
 api.add_resource(GroupHandler, '/QuePasApp/groups')
+
 api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>')
+
+api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupID>/participants')
+
 api.add_resource(GroupByUserHandler, '/QuePasApp/groups/user/<int:userID>')
-#Try to follow this format ^^ (It's more compact and legible, and i believe it's easier too)
+
+api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner')
+
 
 #============================#
 #        Message API         #
@@ -49,7 +55,7 @@ def home():
 api.add_resource(UserHandler, '/QuePasApp/users' )
 
 #Searches users by given id
-#api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
+api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
 
 #Searches user by a given First Name
 api.add_resource(UserByNameHandler, '/QuePasApp/users/<string:uFirstName>')

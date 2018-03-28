@@ -2,6 +2,7 @@ from flask_restful import Resource
 from flask import jsonify
 from flask_restful import reqparse
 from dao.group_chat_dao import ChatDAO
+from dao.group_participants_dao import ParticipantsDao
 
 
 #instance of Chat DAO
@@ -60,4 +61,14 @@ class GroupByUserHandler(Resource):
     def get(self, userID): #get groups by user id
         result = dao.getGroupsByUserID(userID)
         return result
+
+class GroupParticipantsHandler(Resource):
     
+    def get(self, groupID):
+        pdao = ParticipantsDao()
+        result = pdao.getParticipantsOfGroupById(groupID)
+        return result
+
+class GroupOwnerHandler(Resource):
+    def get(self, groupID):
+        return dao.getGroupOwner(groupID)    

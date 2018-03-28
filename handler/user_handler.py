@@ -21,7 +21,7 @@ def mapToDict(row):
 class UserHandler(Resource):
 	def get(self):
 		result = dao.getAllUsers()
-		return jsonify(User = result)
+		return jsonify(cacolina = result)
 
 class UserByIdHandler(Resource):
 	def get(self, IdUser):

@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import jsonify
 from flask_restful import reqparse
 from dao.message_dao import MessagesDAO
-from test.support import resource
+#from test.support import resource
 
 #Construct DAO Instance
 dao = MessagesDAO()

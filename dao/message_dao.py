@@ -42,10 +42,10 @@ class MessagesDAO:
 class Message:
     #Message object is created using all available parameters
     def __init__(self, mID, cont, wID, gID, postD, postT):     
-        self.messageID = mID
+        self.messageId = mID
         self.content = cont
-        self.writerID = wID
-        self.groupID = gID
+        self.writerId = wID
+        self.groupId = gID
         self.reactions = []
         self.postDate = postD
         self.postTime = postT
@@ -55,13 +55,13 @@ class Message:
         return self.content
     
     def getWriter(self):
-        return self.writerID
+        return self.writerId
     
     def getGroup(self):
-        return self.groupID
+        return self.groupId
     
     def getID(self):
-        return self.messageID
+        return self.messageId
     
     def getReaction(self):
         return self.reactions
@@ -80,8 +80,8 @@ class Message:
     def toDict(self):
         M = {}
         M['id'] = self.getID()
-        M['writerID'] = self.getWriter()
-        M['groupID'] = self.getGroup()
+        M['writerId'] = self.getWriter()
+        M['groupId'] = self.getGroup()
         M['content'] = self.getText()
         M['reactions'] = self.getReaction()
         M['postDate'] = self.getPostDate()

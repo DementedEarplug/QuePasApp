@@ -1,6 +1,8 @@
 from flask import jsonify
+from dao.user_dao import UserDAO
 class ChatDAO:
     def __init__(self):
+        self.udao = UserDAO()
         group1={'id':1,'name':'ICOM','userID':7001}
         group2={'id':2,'name':'ICOM','userID':4405}
         self.data = [group1, group2]
@@ -41,8 +43,11 @@ class ChatDAO:
     def deleteGroupByID(self, id):
         index = -1
         for i in range(0,len(self.data)):
-            
             if(id==self.data[i]['id']):
-                index = i        
+                index = i
         return self.data.pop(index)
+    def getGroupOwner(self, id):
+        uid = self.getGroupByID(id)['userID']
+        user = self.udao.getUserById(uid)
+        return self.udao.mapUserToDict(user)
 

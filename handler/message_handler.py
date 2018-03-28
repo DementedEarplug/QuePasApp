@@ -28,6 +28,7 @@ class MessageByIdHandler(Resource):
 #This handler will change the reaction status of the message 
 #corresponding to the given id in the given group
 class MessageReactionHandler(Resource):
+    #def get (get reactions for messages)
     def put(self, gName, id):
         message = dao.getMessage(gName, id)
         if(message):
@@ -59,10 +60,12 @@ class MessagePostHandler(Resource):
     def post(self, gName):
         parser = reqparse.RequestParser()
         parser.add_argument('text', type=str, location = 'args')
-        parser.add_argument('writerID', type=int, location = 'args')
+        parser.add_argument('writerId', type=int, location = 'args')
         args = parser.parse_args(strict=True) #Arguments in query are stored in args
-        post = dao.postMessage(gName, args['text'], args['writerID']) #Creates message
+        post = dao.postMessage(gName, args['text'], args['writerId']) #Creates message
         if (post):
             return jsonify(Messages=post)
         return {'Error' : "UNABLE TO POST MESSAGE"}, 404
     
+##RepliesHandler
+##get message id, check that id on replies table, return reply object (replyID, messageID, respondsToID)

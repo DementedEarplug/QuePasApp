@@ -17,11 +17,6 @@ class UserDAO:
         return self.data
 
     def getAllUsernames(self):
-       # usernames = {'IdUser':[], 'username':[]}
-        #for r in self.data:
-         #   usernames['IdUser'].append(r['IdUser'])
-          #  usernames['username'].append(r['username'])
-        #return usernames
         username = []
         for r in self.data:
             username.append({'IdUser':r['IdUser'], 'username': r['username']})

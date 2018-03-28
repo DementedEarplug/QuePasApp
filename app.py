@@ -47,10 +47,6 @@ api.add_resource(MessageSearchHandler, '/QuePasApp/groups/<string:gName>/message
 #Posts a new message into group
 api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/post')
 
-@app.route('/')
-def home():
-    #Future implementation will contain the Dashboard
-    return "The beginning"
 
 #============================#
 #         User API           #

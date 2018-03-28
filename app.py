@@ -49,7 +49,7 @@ def home():
 api.add_resource(UserHandler, '/QuePasApp/users' )
 
 #Searches users by given id
-#api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
+api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
 
 #Searches user by a given First Name
 api.add_resource(UserByNameHandler, '/QuePasApp/users/<string:uFirstName>')

@@ -3,45 +3,6 @@ from dao.user_dao import UserDAO
 from flask_restful import Resource, reqparse
 
 
-"""class UserHandler:
-
-    def mapToDict(self, row):
-        result = {}
-        result['IdUser'] = row[0]
-        result['uFirstName'] = row[1]
-        result['uLastname'] = row[2]
-        result['username'] = row[3]
-        result['password'] = row[4]
-        result['phone'] = row[5]
-        result['email'] = row[6]
-        return result
-
-    def getAllUsers(self):
-        dao = UserDAO()
-        result = dao.getAllUsers()
-        mapped_result = []
-        for r in result:
-            mapped_result.append(self.mapToDict(r))
-        return jsonify(User = mapped_result)
-
-    def getUserbyId(self,id):
-        dao = UserDAO()
-        result = dao.getUserById(id)
-        if result == None:
-            return jsonify(Error="NOT FOUND"), 404
-        else:
-            mapped = self.mapToDict(result)
-            return jsonify(User = mapped)
-    
-    def searchUserByName(self, args):
-        name = args.get('uFirstName')
-        dao = UserDAO()
-        result = dao.searchByName(name)
-        mapped_result = []
-        for r in result:
-            mapped_result.append(self.mapToDict(r))
-        return jsonify(User=mapped_result)"""
-
 #Construct DAO instance
 dao = UserDAO()
 
@@ -54,32 +15,41 @@ def mapToDict(row):
         result['password'] = row[4]
         result['phone'] = row[5]
         result['email'] = row[6]
+       #result['contactList'] = row[7]
         return result
 
 class UserHandler(Resource):
 	def get(self):
 		result = dao.getAllUsers()
-		mapped_result = []
-		for r in result:
-			mapped_result.append(mapToDict(r))
-		return jsonify(User = mapped_result)
+		return jsonify(User = result)
 
 class UserByIdHandler(Resource):
 	def get(self, IdUser):
 		result = dao.getUserById(IdUser)
 		if result == None:
-			return jsonify(Error="NOT FOUND"), 404
+			return jsonify("NOT FOUND"), 404
 		else:
-			mapped = mapToDict(result)
-			return jsonify(User = mapped)
+			return jsonify(User = result)
 
 class UserByNameHandler(Resource):
     def get(self, uFirstName):
         user = dao.searchByName(uFirstName)
-        mapped = []
-        for r in user:
-
-            mapped.append(mapToDict(r))
-        return jsonify(User = mapped)
+        return jsonify(User = user)
 
     
+
+class UserByLastNameHandler(Resource):
+    def get(self, uLastname):
+        user = dao.searchByLName(uLastname)
+        return jsonify(User = user)
+
+class GetByUsernameHandler(Resource):
+    def get(self, username):
+        user = dao.searchByUsername(username)
+        return jsonify(User = user)
+
+class UsernameHandler(Resource):
+    def get(self):
+        result= dao.getAllUsernames()
+        return result
+#UserContactsHandler

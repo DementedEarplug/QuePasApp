@@ -39,6 +39,7 @@ api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/
 
 @app.route('/')
 def home():
+    #Future implementation will contain the Dashboard
     return "The beginning"
 
 #============================#
@@ -49,7 +50,7 @@ def home():
 api.add_resource(UserHandler, '/QuePasApp/users' )
 
 #Searches users by given id
-#api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
+api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
 
 #Searches user by a given First Name
 api.add_resource(UserByNameHandler, '/QuePasApp/users/<string:uFirstName>')

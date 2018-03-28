@@ -1,8 +1,8 @@
 from flask_restful import Resource
-from flask import jsonify
+from flask import jsonify, request
 from flask_restful import reqparse
 from dao.message_dao import MessagesDAO
-#from test.support import resource
+
 
 #Construct DAO Instance
 dao = MessagesDAO()
@@ -12,16 +12,16 @@ dao = MessagesDAO()
 class MessageHandler(Resource):
     def get(self, gName):
         result = dao.getAllMessages(gName)
-        if (result != None):
+        if (result):
             return jsonify(Messages=result)
         return jsonify(Error="MESSAGES NOT FOUND"), 404
     
 class MessageByIdHandler(Resource):
     def get(self, gName, id):
         result = dao.getMessage(gName, id)
-        if(result != None):
+        if(result):
             return jsonify(Messages=result)
-        return jsonify(Error="MESSAGE NOT FOUND"), 404
+        return jsonify(Error="NOT FOUND"), 404
     
 class MessageReactionHandler(Resource):
     def put(self, gName, id):
@@ -40,9 +40,9 @@ class MessageSearchHandler(Resource):
     def get(self, gName, text):
         containsText = []
         messages = dao.getAllMessages(gName)
-        if(messages != None):
+        if(messages):
             for m in messages:
-                if m['content'] == text:
+                if text in m['content']:
                     containsText.append(m)
             if(containsText):
                 return jsonify(Messages=containsText)
@@ -53,10 +53,10 @@ class MessagePostHandler(Resource):
     def post(self, gName):
         parser = reqparse.RequestParser()
         parser.add_argument('text', type=str, location = 'args')
-        parser.add_argument('writerID', type=int, location = 'args')
+        parser.add_argument('writerId', type=int, location = 'args')
         args = parser.parse_args(strict=True)
-        post = dao.postMessage(gName, args['text'], args['writerID'])
-        if (post != None):
+        post = dao.postMessage(gName, args['text'], args['writerId'])
+        if (post):
             return jsonify(Messages=post)
         return jsonify(Error="UNABLE TO POST MESSAGE"), 404
     

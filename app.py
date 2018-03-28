@@ -17,15 +17,15 @@ def home():
 #          Chat API          #
 #============================#
 
-api.add_resource(GroupHandler, '/QuePasApp/groups')
+api.add_resource(GroupHandler, '/QuePasApp/groups/')
 
-api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>')
+api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>/')
 
-api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupID>/participants')
+api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupID>/participants/')
 
-api.add_resource(GroupByUserHandler, '/QuePasApp/groups/user/<int:userID>')
+api.add_resource(GroupByUserHandler, '/QuePasApp/groups/user/<int:userID>/')
 
-api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner')
+api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner/')
 
 
 #============================#
@@ -33,19 +33,19 @@ api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner')
 #============================#
 
 #Returns all messages available in the group
-api.add_resource(MessageHandler, '/QuePasApp/groups/<string:gName>/messages')
+api.add_resource(MessageHandler, '/QuePasApp/groups/<string:gName>/messages/')
 
 #Returns a specific message by using its id
-api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')
+api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>/')
 
 #Adds a reaction to the message that corresponds to the Id
-api.add_resource(MessageReactionHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')
+api.add_resource(MessageReactionHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>/')
 
 #Searches for a message that contains the text specified
-api.add_resource(MessageSearchHandler, '/QuePasApp/groups/<string:gName>/messages/<string:text>')
+api.add_resource(MessageSearchHandler, '/QuePasApp/groups/<string:gName>/messages/<string:text>/')
 
 #Posts a new message into group
-api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/post')
+api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/post/')
 
 
 #============================#
@@ -53,22 +53,22 @@ api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/
 #============================#
 
 #Diplays all the users in a given group
-api.add_resource(UserHandler, '/QuePasApp/users' )
+api.add_resource(UserHandler, '/QuePasApp/users/' )
 
 #Return the usernames of all available users
 api.add_resource(UsernameHandler, '/QuePasApp/users/username/' )
 
 #Searches users by given id
-api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
+api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>/')
 
 #Searches user by a given First Name
-api.add_resource(UserByNameHandler, '/QuePasApp/users/firstname/<string:uFirstName>')
+api.add_resource(UserByNameHandler, '/QuePasApp/users/firstname/<string:uFirstName>/')
 
 #Searches a user by a given Last Name
-api.add_resource(UserByLastNameHandler, '/QuePasApp/users/lastname/<string:uLastname>')
+api.add_resource(UserByLastNameHandler, '/QuePasApp/users/lastname/<string:uLastname>/')
 
 #Searches a user by a given username
-api.add_resource(GetByUsernameHandler,'/QuePasApp/users/username/<string:username>')
+api.add_resource(GetByUsernameHandler,'/QuePasApp/users/username/<string:username>/')
 
 
 

@@ -15,6 +15,7 @@ def mapToDict(row):
         result['password'] = row[4]
         result['phone'] = row[5]
         result['email'] = row[6]
+       #result['contactList'] = row[7]
         return result
 
 class UserHandler(Resource):
@@ -37,6 +38,15 @@ class UserByIdHandler(Resource):
 class UserByNameHandler(Resource):
     def get(self, uFirstName):
         user = dao.searchByName(uFirstName)
+        mapped = []
+        for r in user:
+
+            mapped.append(mapToDict(r))
+        return jsonify(User = mapped)
+
+class UserByLastNameHandler(Resource):
+    def get(self, uLastname):
+        user = dao.searchByLastName(uLastname)
         mapped = []
         for r in user:
 

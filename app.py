@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
-from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler
+from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByUserHandler
 from dao.message_dao import MessagesDAO
@@ -12,7 +12,7 @@ api = Api(app)
 @app.route('/')
 def home():
     return "The beginning"
-    
+
 #============================#
 #          Chat API          #
 #============================#
@@ -53,6 +53,9 @@ api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
 
 #Searches user by a given First Name
 api.add_resource(UserByNameHandler, '/QuePasApp/users/<string:uFirstName>')
+
+#Searches a user by a given Last Name
+api.add_resource(UserByLastNameHandler, '/QuePasApp/users/<string:uLastname>')
 
 
 if(__name__=='__main__'):

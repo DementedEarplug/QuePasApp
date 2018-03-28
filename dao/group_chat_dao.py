@@ -49,5 +49,5 @@ class ChatDAO:
     def getGroupOwner(self, id):
         uid = self.getGroupByID(id)['userID']
         user = self.udao.getUserById(uid)
-        return self.udao.mapUserToDict(user)
+        return user
 

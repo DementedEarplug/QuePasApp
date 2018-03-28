@@ -24,6 +24,7 @@ class MessageByIdHandler(Resource):
         return jsonify(Error="MESSAGE NOT FOUND"), 404
     
 class MessageReactionHandler(Resource):
+    #def get (get reactions for messages)
     def put(self, gName, id):
         message = dao.getMessage(gName, id)
         if(message != None):
@@ -59,4 +60,5 @@ class MessagePostHandler(Resource):
         if (post != None):
             return jsonify(Messages=post)
         return jsonify(Error="UNABLE TO POST MESSAGE"), 404
-    
+##RepliesHandler
+##get message id, check that id on replies table, return reply object (replyID, messageID, respondsToID)

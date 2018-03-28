@@ -12,6 +12,17 @@ class UserDAO:
         self.data.append(user2)
         self.data.append(user3)
         self.data.append(user4)
+
+    def mapUserToDict(self, row):
+        result = {}
+        result['IdUser'] = row[0]
+        result['uFirstName'] = row[1]
+        result['uLastname'] = row[2]
+        result['username'] = row[3]
+        result['password'] = row[4]
+        result['phone'] = row[5]
+        result['email'] = row[6]
+        return result
     
     def getAllUsers(self):
         return self.data

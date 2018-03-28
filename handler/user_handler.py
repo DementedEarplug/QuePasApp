@@ -21,10 +21,7 @@ def mapToDict(row):
 class UserHandler(Resource):
 	def get(self):
 		result = dao.getAllUsers()
-		mapped_result = []
-		for r in result:
-			mapped_result.append(dao.mapUserToDict(r))
-		return jsonify(User = mapped_result)
+		return jsonify(User = result)
 
 class UserByIdHandler(Resource):
 	def get(self, IdUser):
@@ -32,26 +29,27 @@ class UserByIdHandler(Resource):
 		if result == None:
 			return jsonify("NOT FOUND"), 404
 		else:
-			mapped = dao.mapUserToDict(result)
-			return jsonify(User = mapped)
+			return jsonify(User = result)
 
 class UserByNameHandler(Resource):
     def get(self, uFirstName):
         user = dao.searchByName(uFirstName)
-        mapped = []
-        for r in user:
-            user = dao.mapUserToDict(r)
-            mapped.append(user)
-        return jsonify(User = mapped)
+        return jsonify(User = user)
+
+    
 
 class UserByLastNameHandler(Resource):
     def get(self, uLastname):
-        user = dao.searchByLastName(uLastname)
-        mapped = []
-        for r in user:
+        user = dao.searchByLName(uLastname)
+        return jsonify(User = user)
 
-            mapped.append(mapToDict(r))
-        return jsonify(User = mapped)
+class GetByUsernameHandler(Resource):
+    def get(self, username):
+        user = dao.searchByUsername(username)
+        return jsonify(User = user)
 
-    
+class UsernameHandler(Resource):
+    def get(self):
+        result= dao.getAllUsernames()
+        return result
 #UserContactsHandler

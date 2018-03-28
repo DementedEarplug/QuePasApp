@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
-from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler
+from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, GetByUsernameHandler, UsernameHandler
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByUserHandler, GroupParticipantsHandler, GroupOwnerHandler
 from dao.message_dao import MessagesDAO
@@ -54,14 +54,22 @@ api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/
 #Diplays all the users in a given group
 api.add_resource(UserHandler, '/QuePasApp/users' )
 
+#Return the usernames of all available users
+api.add_resource(UsernameHandler, '/QuePasApp/users/username/' )
+
 #Searches users by given id
 api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>')
 
 #Searches user by a given First Name
-api.add_resource(UserByNameHandler, '/QuePasApp/users/<string:uFirstName>')
+api.add_resource(UserByNameHandler, '/QuePasApp/users/firstname/<string:uFirstName>')
 
 #Searches a user by a given Last Name
-api.add_resource(UserByLastNameHandler, '/QuePasApp/users/<string:uLastname>')
+api.add_resource(UserByLastNameHandler, '/QuePasApp/users/lastname/<string:uLastname>')
+
+#Searches a user by a given username
+api.add_resource(GetByUsernameHandler,'/QuePasApp/users/username/<string:username>')
+
+
 
 
 if(__name__=='__main__'):

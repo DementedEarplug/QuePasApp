@@ -9,6 +9,10 @@ from handler.message_handler import MessageHandler, MessageByIdHandler, MessageR
 app = Flask(__name__)
 api = Api(app)
 
+@app.route('/')
+def home():
+    return "The beginning"
+    
 #============================#
 #          Chat API          #
 #============================#
@@ -36,10 +40,6 @@ api.add_resource(MessageSearchHandler, '/QuePasApp/groups/<string:gName>/message
 
 #Posts a new message into group
 api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/post')
-
-@app.route('/')
-def home():
-    return "The beginning"
 
 #============================#
 #         User API           #

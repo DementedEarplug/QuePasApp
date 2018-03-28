@@ -1,12 +1,13 @@
 from flask import jsonify
+import time
 
 class MessagesDAO:
     def __init__(self):
         self.data = []
-        self.data.append(Message(3432, "Hey", 20, 123).toDict())
-        self.data.append(Message(3433, "Dimelo", 13, 123).toDict())
-        self.data.append(Message(3434, "Comemos en Denny's hoy?", 20, 123).toDict())
-        self.data.append(Message(3435, "Dale sii", 13, 123).toDict())
+        self.data.append(Message(3432, "Hey", 20, 123, "00:03:05", "03/27/2018").toDict())
+        self.data.append(Message(3433, "Dimelo", 13, 123, "03/27/2018", "00:03:30").toDict())
+        self.data.append(Message(3434, "Comemos en Denny's hoy?", 20, 123, "03/27/2018", "00:04:00").toDict())
+        self.data.append(Message(3435, "Dale sii", 13, 123, "03/27/2018", "00:05:00").toDict())
         self.size = len(self.data)
         
     
@@ -27,7 +28,7 @@ class MessagesDAO:
     
     def postMessage(self, gName, content, uID):
         if(gName == "Wombo-Combo"):
-            m = Message(self.data[self.size - 1]['id'] + 1, content, uID, 123).toDict()
+            m = Message(self.data[self.size - 1]['id'] + 1, content, uID, 123, time.strftime("%X"), time.strftime("%x")).toDict()
             self.data.append(m)
             return m
         else:
@@ -35,13 +36,16 @@ class MessagesDAO:
 
 
 class Message:
-    def __init__(self, mID, cont, wID, gID):
+    def __init__(self, mID, cont, wID, gID, postD, postT):
         
         self.messageID = mID
         self.content = cont
         self.writerID = wID
         self.groupID = gID
         self.reaction = ""
+        self.postDate = postD
+        self.postTime = postT
+        
     
     def getText(self):
         return self.content
@@ -58,6 +62,12 @@ class Message:
     def getReaction(self):
         return self.reaction
     
+    def getPostDate(self):
+        return self.postDate
+    
+    def getPostTime(self):
+        return self.postTime    
+    
     def setReaction(self, r):
         self.reaction = r
     
@@ -68,4 +78,6 @@ class Message:
         M['groupID'] = self.getGroup()
         M['content'] = self.getText()
         M['reaction'] = self.getReaction()
+        M['postDate'] = self.getPostDate()
+        M['postTime'] = self.getPostTime()
         return M

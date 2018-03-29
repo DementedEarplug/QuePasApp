@@ -4,7 +4,7 @@ from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByUserHandler, GroupParticipantsHandler, GroupOwnerHandler
 from dao.message_dao import MessagesDAO
-from handler.message_handler import MessageHandler, MessageByIdHandler, MessageReactionHandler, MessageSearchHandler, MessagePostHandler
+from handler.message_handler import MessageHandler, MessageByIdHandler, MessageReactionHandler, MessageSearchHandler, MessagePostHandler, GroupMessageHandler, MessageCountHandler
 
 app = Flask(__name__)
 api = Api(app)
@@ -32,20 +32,28 @@ api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner/')
 #        Message API         #
 #============================#
 
+#Returns all messages
+api.add_resource(MessageHandler, '/QuePasApp/groups/messages/')
+
+#Returns count of all messages
+api.add_resource(MessageCountHandler, '/QuePasApp/groups/messages/count/')
+
 #Returns all messages available in the group
-api.add_resource(MessageHandler, '/QuePasApp/groups/<string:gName>/messages/')
+api.add_resource(GroupMessageHandler, '/QuePasApp/groups/<string:gName>/messages')
 
 #Returns a specific message by using its id
 api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>/')
 
 #Adds a reaction to the message that corresponds to the Id
-api.add_resource(MessageReactionHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>/')
+api.add_resource(MessageReactionHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')
 
 #Searches for a message that contains the text specified
 api.add_resource(MessageSearchHandler, '/QuePasApp/groups/<string:gName>/messages/<string:text>/')
 
-#Posts a new message into group
-api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/post/')
+#Posts a new message into group (old implementation)
+#api.add_resource(MessagePostHandler, '/QuePasApp/groups/<string:gName>/messages/post')
+
+#Gets message count in total 
 
 
 #============================#

@@ -8,13 +8,29 @@ dao = MessagesDAO()
 
 #Contains implementation related to all message handling operations of the application
 
-#General Message Handler that returns all messages in the group chat
 class MessageHandler(Resource):
+    def get(self):
+        result = dao.getAllMessages()
+        if(result):
+            return jsonify(Messages=result)
+        return {'Error' : "INTERNAL SERVER ERROR"}, 500
+    
+#General Message Handler that returns all messages in the group chat
+class GroupMessageHandler(Resource):
     def get(self, gName):
-        result = dao.getAllMessages(gName) #Gets all messages with DAO
+        result = dao.getGroupMessages(gName) #Gets all messages with DAO
         if (result):
             return jsonify(Messages=result) #If not null returns all of the group chat messages
         return {'Error' : "MESSAGES NOT FOUND"}, 404
+    def post(self, gName):
+        parser = reqparse.RequestParser()
+        parser.add_argument('text', type=str, location = 'json')
+        parser.add_argument('writerId', type=int, location = 'json')
+        args = parser.parse_args(strict=True) #Arguments in query are stored in args
+        post = dao.postMessage(gName, args['text'], args['writerId']) #Creates message
+        if (post):
+            return jsonify(Messages=post)
+        return {'Error' : "UNABLE TO POST MESSAGE"}, 500
     
 #Specific Message Handler that returns messages that corresponds 
 #to the given id in the current group chat
@@ -37,14 +53,13 @@ class MessageReactionHandler(Resource):
             args = parser.parse_args(strict=True)
             message['reactions'].append(args['reaction'])
             return jsonify(Messages=message) #Message with new reaction is returned
-        else:
-            return {'Error' : "INTERNAL SERVER ERROR"}, 500
+        return {'Error' : "INTERNAL SERVER ERROR"}, 500
 
 #Text searches in a group chat's messages are performed
 class MessageSearchHandler(Resource):
     def get(self, gName, text):
         containsText = []
-        messages = dao.getAllMessages(gName)
+        messages = dao.getGroupMessages(gName)
         if(messages):
             for m in messages:
                 if text in m['content']:
@@ -59,13 +74,23 @@ class MessageSearchHandler(Resource):
 class MessagePostHandler(Resource):
     def post(self, gName):
         parser = reqparse.RequestParser()
-        parser.add_argument('text', type=str, location = 'args')
-        parser.add_argument('writerId', type=int, location = 'args')
+        parser.add_argument('text', type=str, location = 'json')
+        parser.add_argument('writerId', type=int, location = 'json')
         args = parser.parse_args(strict=True) #Arguments in query are stored in args
         post = dao.postMessage(gName, args['text'], args['writerId']) #Creates message
         if (post):
             return jsonify(Messages=post)
-        return {'Error' : "UNABLE TO POST MESSAGE"}, 404
-    
+        return {'Error' : "UNABLE TO POST MESSAGE"}, 500
+
+class MessageCountHandler(Resource):
+    def get(self):
+        result = dao.getAllMessages()
+        if(result):
+            count = 0
+            for g in result:
+                for m in g:
+                    count = count + 1
+            return jsonify(Count=count)
+        return {'Error' : "INTERNAL SERVER ERROR"}, 500
 ##RepliesHandler
 ##get message id, check that id on replies table, return reply object (replyID, messageID, respondsToID)

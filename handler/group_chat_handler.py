@@ -19,7 +19,12 @@ def isInList(uid): ##checks if user exists in udao
     udao = UserDAO()
     users = udao.getAllUsers()
     isInList = False
-
+    
+    #Check if is in list
+    for u in users:
+        if uid == u['IdUser']:
+            isInList = True
+    return isInList
 
 ## for /QuePasApp/groups route
 class GroupHandler(Resource):

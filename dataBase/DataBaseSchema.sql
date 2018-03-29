@@ -1,6 +1,6 @@
 /*User*/
 create table user( IdUser serial primary key, uFirstName varchar(15), uLastName varchar(15), 
-    username varchar(15) , uPassword varchar(8),  phoneNumber char(10), email varchar(25));
+    username varchar(15) , uPassword varchar(8),  phoneNumber char(10), email varchar(25), IdCl integer references contactlist(IdContactList) );
 
 --Self reference
 create table contactlist( IdContactList serial primary key, IdOwner integer references user(IdUser),

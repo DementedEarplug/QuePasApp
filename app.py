@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
-from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, GetByUsernameHandler, UsernameHandler
+from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, GetByUsernameHandler, UsernameHandler, ContactListHandler
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander
 from dao.message_dao import MessagesDAO
@@ -72,7 +72,8 @@ api.add_resource(UserByLastNameHandler, '/QuePasApp/users/lastname/<string:uLast
 #Searches a user by a given username
 api.add_resource(GetByUsernameHandler,'/QuePasApp/users/username/<string:username>/')
 
-
+#Displays contact list of a user with a given ID
+api.add_resource(ContactListHandler, '/QuePasApp/users/<int:IdUser>/contactlist')
 
 
 if(__name__=='__main__'):

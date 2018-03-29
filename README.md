@@ -3,6 +3,12 @@ Social network application
 
 With this application users will be able to chat with each other through message posts in group chats. Also, users will be able to add other users to their contact lists for future reference when creating a group chat. Reactions for chat messages are possible (like and dislike) and possibly the user could post a message with an image or video. The main page of the web application will contain a dashboard where the user can see the trending topics (via #), and the total number of messages per day, replies per day, and likes and dislikes per day. Lastly, it will present the most active users depending on their group chat activity (message posting, reactions, replies)
 
+## Requirements
+   * Python 2.7.6
+   * pip
+      * flask
+      * flask_restful
+
 ## Entity Relationship Diagram
 
 Our ER Diagram consists of 4 Main Entitities: Users, Groups and Messages, Reaction. These have various relationships between each other such as: Participant, Creates, Posts, Read by, Makes, Contains, Has, Reply.

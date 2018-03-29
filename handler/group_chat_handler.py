@@ -129,4 +129,5 @@ class GroupOwnerHandler(Resource): #Get owner of group
         group = dao.getGroupByID(groupID)
         if (len(group) == 0):
             return {"Error":"group does not exists"}, 404
-        return dao.getGroupOwner(groupID)    
+        result = dao.getGroupOwner(groupID)
+        return jsonify(Owner = result)

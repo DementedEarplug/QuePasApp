@@ -16,18 +16,23 @@ def home():
 #============================#
 #          Chat API          #
 #============================#
+#returns every group
+api.add_resource(GroupHandler, '/QuePasApp/groups/') #done #done
 
-api.add_resource(GroupHandler, '/QuePasApp/groups/')
+#return a single group
+api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>/') #done #done
 
-api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>/')
+#returns every participants of a group
+api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupID>/participants/') #done #done
 
-api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupID>/participants/')
+#returns every group where user is owner
+api.add_resource(GroupByOwnerHandler, '/QuePasApp/groups/user/<int:userID>/') #done #done
 
-api.add_resource(GroupByOwnerHandler, '/QuePasApp/groups/user/<int:userID>/')
+#returns the owner of a group
+api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner/') #done #done
 
-api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner/')
-
-api.add_resource(UserGroupsHander, '/QuePasApp/users/<int:userID>/groups/') 
+#returns every groups where user is participant
+api.add_resource(UserGroupsHander, '/QuePasApp/users/<int:userID>/groups/') #done
 
 
 #============================#

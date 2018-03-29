@@ -17,10 +17,10 @@ class UserDAO:
         return self.data
 
     def getAllUsernames(self):
-        usernames = []
+        username = []
         for r in self.data:
-            usernames.append(r['username'])
-        return usernames
+            username.append({'IdUser':r['IdUser'], 'username': r['username']})
+        return username
     
     def getUserById(self, id):
         for r in self.data:

@@ -15,7 +15,7 @@ create table group( IdGroup serial primary key, gName varchar(15),
 create table messages( IdMessage serial primary key, content varchar(250), IdUser integer references user(IdUser), 
     IdGroup integer references group(IdGroup), postDate date, postTime time );
 
-create table reply( IdReply serial primary, IdRepliedTo integer references message(IdMessage), content varchar(250));
+create table reply( IdReply serial primary, IdRepliedTo integer references messages(IdMessage), IdResponse integer references messages(IdMessage));
 
 /*Reactions*/
 create table likes( IdLikes serial primary key, IdUser integer references user(IdUser), 

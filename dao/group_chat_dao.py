@@ -72,6 +72,7 @@ class ChatDAO:
             if(id==self.data[i]['id']):
                 index = i
         return self.data.pop(index)
+        
     def getGroupOwner(self, id):
         uid = self.getGroupByID(id)['userID']
         user = self.udao.getUserById(uid)

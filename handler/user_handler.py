@@ -1,22 +1,12 @@
 from flask import jsonify, request
 from dao.user_dao import UserDAO 
+from dao.contactlist_dao import ContactlistDAO
 from flask_restful import Resource, reqparse
 
 
 #Construct DAO instance
 dao = UserDAO()
-
-def mapToDict(row):
-        result = {}
-        result['IdUser'] = row[0]
-        result['uFirstName'] = row[1]
-        result['uLastname'] = row[2]
-        result['username'] = row[3]
-        result['password'] = row[4]
-        result['phone'] = row[5]
-        result['email'] = row[6]
-       #result['contactList'] = row[7]
-        return result
+cDao = ContactlistDAO()
 
 class UserHandler(Resource):
 	def get(self):
@@ -51,5 +41,10 @@ class GetByUsernameHandler(Resource):
 class UsernameHandler(Resource):
     def get(self):
         result= dao.getAllUsernames()
-        return result
+        return jsonify( Usernames = result)
 #UserContactsHandler
+
+class ContactListHandler(Resource):
+     def get(self,IdUser):
+         result = cDao.getAllContacts(IdUser)
+         return jsonify(Contacts = result)

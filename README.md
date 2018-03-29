@@ -9,10 +9,10 @@ Our ER Diagram consists of 4 Main Entitities: Users, Groups and Messages, Reacti
 
 ![alt text](https://i.imgur.com/I9aHxxQ.jpg "QuePasApp - ER Diagram")
 
-### Users **Participant** Groups
+### Users - Participant - Groups
 This entity will have a participant table because many users can belong to many groups. The participant relationship will be mapped using the User's id and the Group's ids to create the table's primary key. 
 
-### Users **Creates** Groups
+### Users - Creates - Groups
 A creates relationship with Groups is defined because one user will be able to create many groups. The creates relationship will not be mapped because it is a one to many relationship with total participation. The Groups entity will contain an attribute that will be a foreign key of the chat creator's id (owner).
 
 ### Users - Posts - Messages

@@ -1,24 +1,50 @@
 from flask import jsonify
 from dao.user_dao import UserDAO
+
+participants = {} 
+participants[1]=[
+    7001, 
+    4405, 
+    8569
+]
+participants[2]=[
+    4405, 
+    5567, 
+    8569
+]
 class ChatDAO:
     def __init__(self):
         self.udao = UserDAO()
         group1={'id':1,'name':'ICOM','userID':7001}
         group2={'id':2,'name':'ICOM','userID':4405}
         self.data = [group1, group2]
+    
     def getGroupByID(self, id):
         result = {}
         for g in self.data:
             if g['id']==id:
                
                 result = g
+
         return result
+
     def getGroupsByUserID(self, userID):
         result = {}
         for g in self.data:
             if g['userID']==userID:
                 result[g['id']]=g
-        return jsonify(result)
+        return result
+
+
+    def getUserGroups(self, userID):
+        result = []
+        groups = self.getGroups() #Get all groups
+        for group in groups:
+            gpar = participants[groups[group]['id']] #get participants of group
+            if userID in gpar: #When user is participant of group
+                result.append(group)
+        return result
+
 
     def addGroup(self, id, name, userID):
         group1={'id':id,'name':name,'userID':userID}

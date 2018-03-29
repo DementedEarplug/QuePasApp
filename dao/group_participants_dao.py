@@ -8,7 +8,6 @@ class ParticipantsDao():
         self.userDAO = UserDAO()
         users = self.userDAO.getAllUsers() #returns a list of dictionaries, user[0] dirtionary with user's 0 attributes
         self.participants = {} 
-        result = []
         self.participants[groups[1]['id']]=[
             users[0]['IdUser'], 
             users[1]['IdUser'],
@@ -19,8 +18,7 @@ class ParticipantsDao():
             users[3]['IdUser'],
             users[2]['IdUser']
         ]
-        result.append(self.participants)
-    def getParticipantsOfGroupById(self, id):
-        return jsonify(Participants=self.participants[id])
+    def getParticipantsOfGroupById(self, id):        
+        return self.participants[id]
         #if id in self.participants:    
             #return {"Participants": self.participants[id]}

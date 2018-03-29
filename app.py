@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, GetByUsernameHandler, UsernameHandler
 from dao.group_chat_dao import ChatDAO
-from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByUserHandler, GroupParticipantsHandler, GroupOwnerHandler
+from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander
 from dao.message_dao import MessagesDAO
 from handler.message_handler import MessageHandler, MessageByIdHandler, MessageReactionHandler, MessageSearchHandler, MessagePostHandler
 
@@ -23,9 +23,11 @@ api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>/')
 
 api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupID>/participants/')
 
-api.add_resource(GroupByUserHandler, '/QuePasApp/groups/user/<int:userID>/')
+api.add_resource(GroupByOwnerHandler, '/QuePasApp/groups/user/<int:userID>/')
 
 api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner/')
+
+api.add_resource(UserGroupsHander, '/QuePasApp/users/<int:userID>/groups/') 
 
 
 #============================#

@@ -1,43 +1,25 @@
 from flask import jsonify
-import time
+import psycopg2
+from config import db_config
 
 #Message Data Access object that retrieves data from the DB (currently hardcoded)
 class MessagesDAO:
     #Hardcoded message data corresponding to one group chat is created
     def __init__(self):
-        self.data = []
-        
-        groupA = []
-        #Wombo-Combo['groupID'] = 123
-        groupA.append(Message(3432, "Hey", 20, 123, "03/27/2018", "00:03:05").toDict())
-        groupA.append(Message(3433, "Dimelo", 13, 123, "03/27/2018", "00:03:30").toDict())
-        groupA.append(Message(3434, "Comemos en Denny's hoy?", 20, 123, "03/27/2018", "00:04:00").toDict())
-        groupA.append(Message(3435, "Dale sii", 13, 123, "03/27/2018", "00:05:00").toDict())
-        self.data.append(groupA)
-        
-        groupB = []
-        #BestiasICOM['groupID'] = 124
-        groupB.append(Message(200, "Acabaste el proyecto?", 23, 124, "03/28/2018", "23:55:05").toDict())
-        groupB.append(Message(201, "No, y tu?", 31, 124, "03/28/2018", "23:56:02").toDict())
-        groupB.append(Message(202, "No", 23, 124, "03/28/2018", "23:57:10").toDict())
-        groupB.append(Message(203, "Nos jodimos", 31, 123, "03/28/2018", "23:58:12").toDict())
-        self.data.append(groupB)
-        #self.size = len(self.data)
-        
-        self.groupNames = [
-            "Wombo-Combo",
-            "BestiasICOM"
-            ]
-        
-        self.groupIds = {
-            "Wombo-Combo" : 0,
-            "BestiasICOM" : 1
-            }
-        
+        #maybe jsut add el url del DB directly?
+        connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
+        self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
+    
     #All messages from all group chats are retrieved
     def getAllMessages(self):
-        return self.data
-        
+        cursor = self.conn.cursor()
+        query = 'select * from messages'
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     #All messages corresponding to a group chat are retrieved 
     def getGroupMessages(self, gName):
         for g in self.groupNames:

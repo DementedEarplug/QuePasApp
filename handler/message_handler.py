@@ -2,18 +2,85 @@ from flask_restful import Resource
 from flask import Response, jsonify
 from flask_restful import reqparse
 from dao.message_dao import MessagesDAO
+from dao.reactions_dao import ReactionsDAO
+from dao.user_dao import UserDAO
 
 #Construct DAO Instance
 dao = MessagesDAO()
+uDao = UserDAO()
+rDao = ReactionsDAO()
+
+def mapToDict(row):
+    mappedMsg = {}
+    mappedMsg['msgId'] = row[0]
+    mappedMsg['content'] = row[1]
+    mappedMsg['userId'] = row[2]
+    mappedMsg['groupId'] = row[3]
+    mappedMsg['postDate'] = str(row[4])
+    mappedMsg['postTime'] = str(row[5])
+    return mappedMsg
+
+def mapLikesToDiCt(row):
+    mappedLikes = {}
+    mappedLikes['likeId']= row[0]
+    mappedLikes['userId']= row[1]
+    mappedLikes['msgId']= row[2]
+    return mappedLikes
+
+def mapDislikesToDiCt(row):
+    mappedDislikes = {}
+    mappedDislikes['dislikeId']= row[0]
+    mappedDislikes['userId']= row[1]
+    mappedDislikes['msgId']= row[2]
+    return mappedDislikes
+
+#Function to map the result of a query into a dictionary.
+def mapUserToDict(row):
+    mappedUser = {}
+    mappedUser['username'] = row[0]
+    return mappedUser
 
 #Contains implementation related to all message handling operations of the application
 
 class MessageHandler(Resource):
     def get(self):
-        result = dao.getAllMessages()
-        if(result):
-            return jsonify(Messages=result)
-        return {'Error' : "INTERNAL SERVER ERROR"}, 500
+        msgList = dao.getAllMessages()
+        resultList = []
+        for row in msgList:
+            result = mapToDict(row)
+            resultList.append(result)
+        if (len(resultList)!=0):
+            return jsonify(Messages= resultList)
+        else:
+            return jsonify("NOT FOUND"), 404
+        
+    
+class MessageLikesHandler(Resource):
+    # Returns the users who like a message with a given ID.
+    def get(self, msgId):
+        userList = rDao.getLikeList(msgId)
+        resultList= []
+        for row in userList:
+            result = mapUserToDict(row)
+            resultList.append(result)
+        if (len(resultList)!=0):
+            return jsonify(Users= resultList)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class MessageDislikesHandler(Resource):
+    # Returns the users who like a message with a given ID.
+    def get(self, msgId):
+        userList = rDao.getDislikeList(msgId)
+        resultList= []
+        for row in userList:
+            result = mapUserToDict(row)
+            resultList.append(result)
+        if (len(resultList)!=0):
+            return jsonify(Users= resultList)
+        else:
+            return jsonify("NOT FOUND"), 404
+
     
 #General Message Handler that returns all messages in the group chat
 class GroupMessageHandler(Resource):

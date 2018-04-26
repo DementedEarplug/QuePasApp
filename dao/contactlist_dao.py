@@ -1,65 +1,33 @@
 from dao.user_dao import UserDAO
+from config import db_config
+import psycopg2
+
 dao = UserDAO()
+
+def mapToDict(row):
+    mappecContactList = {}
+    mappecContactList['ownerId'] = row[0]
+    mappecContactList['userId'] = row[1]
+    return mappecContactList
+
 class ContactlistDAO():
 
     def __init__(self):
-        
-        contList1= Contactlist(001, 7001,[4405,8569,5567])
-        contList2= Contactlist(002, 4405,[5567])
-        contList3= Contactlist(121, 8569,[7001,5567])
-        contList4= Contactlist(561, 5567,[8569,7001])
-
-        self.data = []
-        self.data.append(contList1.mapContactlistToDict())
-        self.data.append(contList2.mapContactlistToDict())
-        self.data.append(contList3.mapContactlistToDict())
-        self.data.append(contList4.mapContactlistToDict())
+        #maybe jsut add el url del DB directly?
+        connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
+        self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
     
-    def getAllContacts(self, IdUser):
-         #returns list of the ID's oc the contacts
+    def getAllContacts(self, ownerId):
+        cursor = self.conn.cursor()
+        query = 'select userid,firstname,lastname,username,phonenumber,email from users inner join contactlist c2 on users.userid = c2.contactid where ownerid = %s;'
+        cursor.execute(query,(ownerId,))
         result = []
-        for r in self.data:
-            if IdUser == r['IdOwner']:
-                result=r['IdContacts']
-        mappedContacts = []
-        for r in result:
-            mappedContacts.append({
-                'IdUser':dao.getUserById(r)['IdUser'],
-                'uFirstName':dao.getUserById(r)['uFirstName'],
-                'phone':dao.getUserById(r)['phone']})
-        toco= {}
-        toco = {"User's "+str(IdUser)+" contacts": mappedContacts}
-        return toco
+        for ror in cursor:
+            result.append(ror)
+        return result
 
          
 
     def getContactlistOwner():
         return self.data[1]
     
-
-
-
-class Contactlist():
-    def __init__(self, IdContactlist, IdOwner, IdContacts):
-        self.IdContactlist = IdContactlist
-        self.IdOwner = IdOwner
-        self.IdContacts = IdContacts
-    
-    #Getters
-
-    def getIdContactlist(self):
-        return self.IdContactlist
-    
-    def getIdOwner(self):
-        return self.IdOwner
-    
-    def getIdContacts(self):
-        return self.IdContacts
-    
-    #Turn attribute into a dictionary
-    def mapContactlistToDict(self):
-        mappedContactlist = {}
-        mappedContactlist['IdContactlist'] = self.getIdContactlist()
-        mappedContactlist['IdOwner'] = self.getIdOwner()
-        mappedContactlist['IdContacts'] = self.getIdContacts()
-        return mappedContactlist

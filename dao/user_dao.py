@@ -17,12 +17,6 @@ class UserDAO:
             result.append(ror)
         return result
 
-    def getAllUsernames(self):
-        username = []
-        for r in self.data:
-            username.append({'userId':r['userId'], 'username': r['username']})
-        return username
-    
     def getUserById(self, userId):
         cursor = self.conn.cursor()
         query = "select userId, FirstName, LastName, username, phoneNumber, email from users where userId = %s ;"
@@ -33,10 +27,10 @@ class UserDAO:
     #need to add one to get contacts
 
     def searchByName(self, name):
-        result = []
-        for r in self.data:
-            if name.lower() == r['uFirstName'].lower():
-                result.append(r)
+        cursor = self.conn.cursor()
+        query = "select userId, FirstName, LastName, username, phoneNumber, email from users where FirstName = %s ;"
+        cursor.execute(query,(name,))
+        result = cursor.fetchone()
         return result
 
     def searchByUsername(self, username):
@@ -47,63 +41,8 @@ class UserDAO:
         return result
 
     def searchByLName(self, Lname):
-        result = []
-        for r in self.data:
-            if Lname.lower() == r['uLastname'].lower():
-                result.append(r)
+        cursor = self.conn.cursor()
+        query = "select userId, FirstName, LastName, username, phoneNumber, email from users where LastName = %s ;"
+        cursor.execute(query,(Lname,))
+        result = cursor.fetchone()
         return result
-
-    #def getUserContacts(self,id):
-     
-     #   result = []
-      #  for r in self.data:
-
-#User class detailing all the attributes it contains    
-class User():
-    def __init__(self,userId, uFirstName,uLastname, username, password,phone, email, contacts):
-        self.userId = userId
-        self.uFirstName = uFirstName
-        self.uLastname = uLastname
-        self.username = username
-        self.password = password
-        self.phone = phone
-        self.email = email
-        self.contacts = contacts
-    
-    #Define getter functions
-    def getID(self):
-        return self.userId
-    
-    def getFirstName(self):
-        return self.uFirstName
-    
-    def getLastName(self):
-        return self.uLastname
-    
-    def getUsername(self):
-        return self.username
-
-    def getPassword(self):
-        return self.password
-
-    def getPhone(self):
-        return self.phone
-    
-    def getEmail(self):
-        return self.email
-    
-    def getContacts(self):
-        return self.contacts
-
-    #Turn attribute into a dictionary
-    def mapUserToDict(self):
-        mappedUser = {}
-        mappedUser['userId'] = self.getID()
-        mappedUser['uFirstName'] = self.getFirstName()
-        mappedUser['uLastname'] = self.getLastName()
-        mappedUser['username'] = self.getUsername()
-        mappedUser['password'] = self.getPassword()
-        mappedUser['phone'] = self.getPhone()
-        mappedUser['email'] = self.getEmail()
-        mappedUser['contacts'] = self.getContacts()
-        return mappedUser

@@ -45,15 +45,23 @@ class UserByIdHandler(Resource):
 
 class UserByNameHandler(Resource):
     def get(self, uFirstName):
-        user = dao.searchByName(uFirstName)
-        return jsonify(User = user)
+        row = dao.searchByName(uFirstName)
+        if not row:
+            return jsonify(Error="User with First Name: %s not gound"%uFirstName),404
+        else:
+            user= mapToDict(row)
+            return jsonify(User= user)
 
     
 
 class UserByLastNameHandler(Resource):
     def get(self, uLastname):
-        user = dao.searchByLName(uLastname)
-        return jsonify(User = user)
+        row = dao.searchByLName(uLastname)
+        if not row:
+            return jsonify(Error="User with Last Name: %s not gound"%uLastname),404
+        else:
+            user= mapToDict(row)
+            return jsonify(User= user)
 
 class GetByUsernameHandler(Resource):
     def get(self, username):
@@ -64,13 +72,15 @@ class GetByUsernameHandler(Resource):
             user= mapToDict(row)
             return jsonify(User= user)
 
-class UsernameHandler(Resource):
-    def get(self):
-        result= dao.getAllUsernames()
-        return jsonify( Usernames = result)
-#UserContactsHandler
 
 class ContactListHandler(Resource):
-     def get(self,userId):
-         result = cDao.getAllContacts(userId)
-         return jsonify(Contacts = result)
+     def get(self,ownerId):
+        userList = cDao.getAllContacts(ownerId)
+        resultList = []
+        for row in userList:
+            result = mapToDict(row)
+            resultList.append(result)
+        if (len(resultList)!=0):
+            return jsonify(Contacts= resultList)
+        else:
+            return jsonify("NOT FOUND"), 404

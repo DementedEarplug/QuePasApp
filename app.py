@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
-from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, GetByUsernameHandler, UsernameHandler, ContactListHandler
+from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, GetByUsernameHandler, ContactListHandler
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander
 from dao.message_dao import MessagesDAO
@@ -70,9 +70,6 @@ api.add_resource(MessageSearchHandler, '/QuePasApp/groups/<string:gName>/message
 #Diplays all the users in a given group
 api.add_resource(UserHandler, '/QuePasApp/users/' )
 
-#Return the usernames of all available users
-api.add_resource(UsernameHandler, '/QuePasApp/users/username/' )
-
 #Searches users by given id
 api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:userId>/')
 
@@ -86,7 +83,7 @@ api.add_resource(UserByLastNameHandler, '/QuePasApp/users/lastname/<string:uLast
 api.add_resource(GetByUsernameHandler,'/QuePasApp/users/username/<string:username>/')
 
 #Displays contact list of a user with a given ID
-api.add_resource(ContactListHandler, '/QuePasApp/users/<int:userId>/contactlist')
+api.add_resource(ContactListHandler, '/QuePasApp/users/<int:ownerId>/contactlist')
 
 
 if(__name__=='__main__'):

@@ -1,23 +1,13 @@
 from flask import jsonify
 from dao.user_dao import UserDAO
+from config import db_config
+import psycopg2
 
-participants = {} 
-participants[1]=[
-    7001, 
-    4405, 
-    8569
-]
-participants[2]=[
-    4405, 
-    5567, 
-    8569
-]
 class ChatDAO:
     def __init__(self):
-        self.udao = UserDAO()
-        group1={'id':1,'name':'ICOM','userID':7001}
-        group2={'id':2,'name':'ICOM','userID':4405}
-        self.data = [group1, group2]
+        #maybe jsut add el url del DB directly?
+        connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
+        self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
     
     def getGroupByID(self, id):
         result = {}
@@ -55,10 +45,14 @@ class ChatDAO:
         print(self.data)
         return group1
 
+    # Get all groups in the system
     def getGroups(self):
-        result = {}
-        for g in self.data:
-           result[g['id']]=g
+        cursor = self.conn.cursor()
+        query = 'select * from groups;'
+        cursor.execute(query)
+        result = []
+        for ror in cursor:
+            result.append(ror)
         return result
 
     def changeGroupName(self, id, name):

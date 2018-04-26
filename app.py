@@ -74,7 +74,7 @@ api.add_resource(UserHandler, '/QuePasApp/users/' )
 api.add_resource(UsernameHandler, '/QuePasApp/users/username/' )
 
 #Searches users by given id
-api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:IdUser>/')
+api.add_resource(UserByIdHandler, '/QuePasApp/users/<int:userId>/')
 
 #Searches user by a given First Name
 api.add_resource(UserByNameHandler, '/QuePasApp/users/firstname/<string:uFirstName>/')
@@ -86,7 +86,7 @@ api.add_resource(UserByLastNameHandler, '/QuePasApp/users/lastname/<string:uLast
 api.add_resource(GetByUsernameHandler,'/QuePasApp/users/username/<string:username>/')
 
 #Displays contact list of a user with a given ID
-api.add_resource(ContactListHandler, '/QuePasApp/users/<int:IdUser>/contactlist')
+api.add_resource(ContactListHandler, '/QuePasApp/users/<int:userId>/contactlist')
 
 
 if(__name__=='__main__'):

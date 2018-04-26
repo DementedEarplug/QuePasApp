@@ -10,7 +10,7 @@ class UserDAO:
 
     def getAllUsers(self):
         cursor = self.conn.cursor()
-        query = 'select * from users;'
+        query = 'select userId, FirstName, LastName, username, phoneNumber, email from users;'
         cursor.execute(query)
         result = []
         for ror in cursor:
@@ -20,14 +20,15 @@ class UserDAO:
     def getAllUsernames(self):
         username = []
         for r in self.data:
-            username.append({'IdUser':r['IdUser'], 'username': r['username']})
+            username.append({'userId':r['userId'], 'username': r['username']})
         return username
     
-    def getUserById(self, id):
-        for r in self.data:
-            if id == r['IdUser']:
-                return r
-        return None
+    def getUserById(self, userId):
+        cursor = self.conn.cursor()
+        query = "select userId, FirstName, LastName, username, phoneNumber, email from users where userId = %s ;"
+        cursor.execute(query,(userId,))
+        result = cursor.fetchone()
+        return result
 
     #need to add one to get contacts
 
@@ -39,10 +40,10 @@ class UserDAO:
         return result
 
     def searchByUsername(self, username):
-        result = []
-        for r in self.data:
-            if username == r['username']:
-                result.append(r)
+        cursor = self.conn.cursor()
+        query = "select userId, FirstName, LastName, username, phoneNumber, email from users where username = %s ;"
+        cursor.execute(query,(username,))
+        result = cursor.fetchone()
         return result
 
     def searchByLName(self, Lname):
@@ -59,8 +60,8 @@ class UserDAO:
 
 #User class detailing all the attributes it contains    
 class User():
-    def __init__(self,IdUser, uFirstName,uLastname, username, password,phone, email, contacts):
-        self.IdUser = IdUser
+    def __init__(self,userId, uFirstName,uLastname, username, password,phone, email, contacts):
+        self.userId = userId
         self.uFirstName = uFirstName
         self.uLastname = uLastname
         self.username = username
@@ -71,7 +72,7 @@ class User():
     
     #Define getter functions
     def getID(self):
-        return self.IdUser
+        return self.userId
     
     def getFirstName(self):
         return self.uFirstName
@@ -97,7 +98,7 @@ class User():
     #Turn attribute into a dictionary
     def mapUserToDict(self):
         mappedUser = {}
-        mappedUser['IdUser'] = self.getID()
+        mappedUser['userId'] = self.getID()
         mappedUser['uFirstName'] = self.getFirstName()
         mappedUser['uLastname'] = self.getLastName()
         mappedUser['username'] = self.getUsername()

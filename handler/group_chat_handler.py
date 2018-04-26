@@ -3,12 +3,18 @@ from flask import jsonify
 from flask_restful import reqparse
 from dao.group_chat_dao import ChatDAO
 from dao.group_participants_dao import ParticipantsDao
-
 from dao.user_dao import UserDAO
 
 
 #instance of Chat DAO
 dao = ChatDAO()
+
+def mapToDict(row):
+    mappedGroup = {}
+    mappedGroup['groupId'] = row[0]
+    mappedGroup['groupName'] = row[1]
+    mappedGroup['ownerId'] = row[2]
+    return mappedGroup
 
 #The way i believe this works is that each route has their own get post put etc... operations
 #So we create a handler for each route
@@ -28,39 +34,16 @@ def isInList(uid): ##checks if user exists in udao
 
 ## for /QuePasApp/groups route
 class GroupHandler(Resource):
-
-    def get(self): #get all groups
-        result = dao.getGroups()
-        if len(result)==0:
-            return {"Error", "There are no grups yet!"}, 404
-        return jsonify(Groups = result)
-    def post(self): #add a group using body of request
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, location = 'json')
-        parser.add_argument('name', type=str, location = 'json')
-        parser.add_argument('userID', type=int, location = 'json')
-        args = parser.parse_args(strict=True)
-        group = {
-            'id' : args['id'],
-            'name' : args['name'], 
-            'userID' : args['userID']
-        }
-        result = dao.addGroup(group['id'], group['name'], group['userID'])
-        return result
-    def put(self): #Update the name of a group
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, location = 'json')
-        parser.add_argument('name', type=str, location = 'json')
-        parser.add_argument('userID', type=int, location = 'json')
-        args = parser.parse_args(strict=True)
-        id = args['id'],
-        id = id[0]
-        name = args['name'],
-        name = name[0] 
-        print(id)
-        result = dao.changeGroupName(id, name)
-        
-        return result
+    def get(self):
+        groupList = dao.getGroups()
+        resultList = []
+        for row in groupList:
+            result = mapToDict(row)
+            resultList.append(result)
+        if(len(resultList)!=0):
+            return jsonify(Groups= resultList)
+        else:
+            return jsonify(Error="Not Found"),404
 
 #for /QuePasApp/groups/<int:id>
 class GroupByIndexHandler(Resource):

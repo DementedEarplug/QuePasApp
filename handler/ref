@@ -1,0 +1,17 @@
+def get(self, userId):
+		row = dao.getUserById(userId)
+        if not row:
+            return jsonify(Error="User with id: %s not found"),404
+        else:
+            user = mapToDict(row)
+            return jsonify(User= user)
+
+groupList = dao.getGroups()
+    resultList = []
+    for row in groupList:
+        result = mapToDict(row)
+        resultList.append(result)
+    if (len(resultList)!=0):
+        return jsonify(User= resultList)
+    else:
+        return jsonify("NOT FOUND"), 404

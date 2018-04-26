@@ -59,13 +59,13 @@ class GroupHandler(Resource):
 
 #for /QuePasApp/groups/<int:id>
 class GroupByIndexHandler(Resource):
-    def get(self, id): #get group by id
-        result = dao.getGroupByID(id)
-        
-        if(len(result) == 0): #Group Doesn't exists
-            return {"Error": "Group does not exists"}, 404
-        
-        return jsonify(Group = result) #result contains all the information of the found group
+    def get(self, groupId): #get group by id
+        row = dao.getGroupByID(groupId)
+        if not row:
+            return jsonify(Error="User with id: %s not gound"%groupId),404
+        else:
+            group= mapToDict(row)
+            return jsonify(Group= group)
 
     def delete(self, id): #delete group by id
         result = dao.deleteGroupByID(id)

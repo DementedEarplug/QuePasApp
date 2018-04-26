@@ -9,13 +9,11 @@ class ChatDAO:
         connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
         self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
     
-    def getGroupByID(self, id):
-        result = {}
-        for g in self.data:
-            if g['id']==id:
-               
-                result = g
-
+    def getGroupByID(self, groupId):
+        cursor = self.conn.cursor()
+        query = "select groupName, groupId, ownerId from groups where groupId = %s ;"
+        cursor.execute(query,(groupId,))
+        result = cursor.fetchone()
         return result
 
     def getGroupsByUserID(self, userID):

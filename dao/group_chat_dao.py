@@ -67,8 +67,13 @@ class ChatDAO:
                 index = i
         return self.data.pop(index)
         
-    def getGroupOwner(self, id):
-        uid = self.getGroupByID(id)['userID']
-        user = self.udao.getUserById(uid)
-        return user
+    def getGroupOwner(self, groupId):
+        cursor = self.conn.cursor()
+        query = 'select userId, FirstName,Lastname, username, phonenumber, email from groups inner join users on ownerId = userId where groupId = %s ;'
+        cursor.execute(query,(groupId,))
+        result = []
+        for ror in cursor:
+            result.append(ror)
+        return result
+
 

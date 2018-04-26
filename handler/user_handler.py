@@ -19,7 +19,9 @@ def mapToDict(row):
     mappedUser['email'] = row[5]
     return mappedUser
 
+
 class UserHandler(Resource):
+    #Returns all the users in the system
     def get(self):
         userList = dao.getAllUsers()
         resultList = []
@@ -32,6 +34,7 @@ class UserHandler(Resource):
             return jsonify("NOT FOUND"), 404
 
 class UserByIdHandler(Resource):
+    # Returns info of a user with a given ID
     def get(self, userId):
         row = dao.getUserById(userId)
         if not row:

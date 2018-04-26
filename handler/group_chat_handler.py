@@ -16,6 +16,17 @@ def mapToDict(row):
     mappedGroup['ownerId'] = row[2]
     return mappedGroup
 
+def mapOwnertoDict(row):
+    mappedUser = {}
+    mappedUser['userId'] = row[0]
+    mappedUser['FirstName'] = row[1]
+    mappedUser['Lastname'] = row[2]
+    mappedUser['username'] = row[3]
+    # mappedUser['userPassword'] = row[4]
+    mappedUser['phoneNumber'] = row[4]
+    mappedUser['email'] = row[5]
+    return mappedUser
+
 #The way i believe this works is that each route has their own get post put etc... operations
 #So we create a handler for each route
 #if there are multiple gets for instance, define a different method for each one and
@@ -33,6 +44,7 @@ def isInList(uid): ##checks if user exists in udao
     return isInList
 
 ## for /QuePasApp/groups route
+# Finds all groups in the system.
 class GroupHandler(Resource):
     def get(self):
         groupList = dao.getGroups()
@@ -106,11 +118,16 @@ class UserGroupsHander(Resource): #Get all groups where user is participant
             return {"Error":"User does not belongs to any group"}, 404
         return jsonify(Groups = result)
 
-#for /QuePasApp/groups/<int:groupID>/owner/
+#for /QuePasApp/groups/<int:groupId>/owner/
 class GroupOwnerHandler(Resource): #Get owner of group
-    def get(self, groupID):
-        group = dao.getGroupByID(groupID)
-        if (len(group) == 0):
-            return {"Error":"group does not exists"}, 404
-        result = dao.getGroupOwner(groupID)
-        return jsonify(Owner = result)
+    def get(self, groupId):
+        groups = dao.getGroupOwner(groupId)
+        if not groups: #dao.getgroupbyis to test if the group exists.
+            return jsonify(Error="Group with id: %s not found"%groupId),404
+        else:
+            resultList=[]
+            for row in groups:
+                result = mapOwnertoDict(row)
+                resultList.append(result)
+            return jsonify(GroupOwner=resultList)
+

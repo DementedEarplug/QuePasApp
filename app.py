@@ -23,16 +23,16 @@ api.add_resource(GroupHandler, '/QuePasApp/groups/') #done #done
 api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:id>/') #done #done
 
 #returns every participants of a group
-api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupID>/participants/') #done #done
+api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupId>/participants/') #done #done
 
 #returns every group where user is owner
-api.add_resource(GroupByOwnerHandler, '/QuePasApp/groups/user/<int:userID>/') #done #done
+api.add_resource(GroupByOwnerHandler, '/QuePasApp/groups/user/<int:userId>/') #done #done
 
 #returns the owner of a group
-api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupID>/owner/') #done #done
+api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupId>/owner/') #done #done
 
 #returns every groups where user is participant
-api.add_resource(UserGroupsHander, '/QuePasApp/users/<int:userID>/groups/') #done
+api.add_resource(UserGroupsHander, '/QuePasApp/users/<int:userId>/groups/') #done
 
 
 #============================#

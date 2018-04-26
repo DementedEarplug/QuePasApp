@@ -4,6 +4,7 @@ import psycopg2
 
 dao = UserDAO()
 
+#Function to map the results of the query into a dictionary.
 def mapToDict(row):
     mappecContactList = {}
     mappecContactList['ownerId'] = row[0]
@@ -13,7 +14,7 @@ def mapToDict(row):
 class ContactlistDAO():
 
     def __init__(self):
-        #maybe jsut add el url del DB directly?
+        #Getting some probles mis this so added el url del DB directly, for the time being.
         connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
         self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
     

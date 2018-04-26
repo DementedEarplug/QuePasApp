@@ -4,10 +4,11 @@ from dao.contactlist_dao import ContactlistDAO
 from flask_restful import Resource, reqparse
 
 
-#Construct DAO instance
+#Construct DAO instances
 dao = UserDAO()
-cDao = ContactlistDAO()
+cDao = ContactlistDAO() #needed to find the contacts.
 
+#Function to map the result of a query into a dictionary.
 def mapToDict(row):
     mappedUser = {}
     mappedUser['userId'] = row[0]
@@ -44,6 +45,7 @@ class UserByIdHandler(Resource):
             return jsonify(User= user)
 
 class UserByNameHandler(Resource):
+    # Search a user with a given firstname.
     def get(self, uFirstName):
         row = dao.searchByName(uFirstName)
         if not row:
@@ -55,6 +57,7 @@ class UserByNameHandler(Resource):
     
 
 class UserByLastNameHandler(Resource):
+    # Search a user with a given lastname.
     def get(self, uLastname):
         row = dao.searchByLName(uLastname)
         if not row:
@@ -64,6 +67,7 @@ class UserByLastNameHandler(Resource):
             return jsonify(User= user)
 
 class GetByUsernameHandler(Resource):
+    # Search a user with a given username.
     def get(self, username):
         row = dao.searchByUsername(username)
         if not row:
@@ -74,6 +78,7 @@ class GetByUsernameHandler(Resource):
 
 
 class ContactListHandler(Resource):
+    #Gets the contact list of the user with userId = ownerId.
      def get(self,ownerId):
         userList = cDao.getAllContacts(ownerId)
         resultList = []

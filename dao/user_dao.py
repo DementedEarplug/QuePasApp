@@ -1,20 +1,21 @@
+import psycopg2
+from config import db_config
+ 
 class UserDAO:
     def __init__(self):
-        # I believe users will only have one phone and or one email -MFR
-        user1= User(7001, 'Gabriel', 'Reyes', 'Reaper', 'Talon1288', '666-006-0606','Reaper@talon.com',1234)
-        user2= User(4405, 'Brigitte', 'Lindholm', 'Squire97', 'EgineeringForevel12', '756-225-8465','brigittaDaPitta12@gmail.com',2345)
-        user3= User(8569, 'Shao', 'Kahn', 'KingOfKings', 'NeatherRealm178', '945-785-6428','getTheHuemans33@yahoo.com',2435)
-        user4= User(5567, 'Sonya', 'Blade', 'Kissshot', 'Jaxx9887', '452-017-2972','bolndie1288@gmail.com',5423)
+        #maybe jsut add el url del DB directly?
+        connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
+        self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
         
 
-        self.data = []
-        self.data.append(user1.mapUserToDict())
-        self.data.append(user2.mapUserToDict())
-        self.data.append(user3.mapUserToDict())
-        self.data.append(user4.mapUserToDict())
-
     def getAllUsers(self):
-        return self.data
+        cursor = self.conn.cursor()
+        query = 'select * from users;'
+        cursor.execute(query)
+        result = []
+        for ror in cursor:
+            result.append(ror)
+        return result
 
     def getAllUsernames(self):
         username = []

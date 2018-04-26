@@ -8,6 +8,17 @@ from flask_restful import Resource, reqparse
 dao = UserDAO()
 cDao = ContactlistDAO()
 
+def map_to_dict(self, row):
+    result = {}
+    mappedUser['userId'] = self.getID()
+    mappedUser['uFirstName'] = self.getFirstName()
+    mappedUser['uLastname'] = self.getLastName()
+    mappedUser['username'] = self.getUsername()
+    mappedUser['password'] = self.getPassword()
+    mappedUser['phone'] = self.getPhone()
+    mappedUser['email'] = self.getEmail()
+    mappedUser['contacts'] = self.getContacts()
+
 class UserHandler(Resource):
 	def get(self):
 		result = dao.getAllUsers()

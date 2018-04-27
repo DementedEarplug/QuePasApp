@@ -9,9 +9,11 @@ from dao.message_dao import MessagesDAO
 from handler.message_handler import (MessageHandler, MessageByIdHandler, MessageReactionHandler, 
 MessageSearchHandler, MessagePostHandler, GroupMessageHandler, MessageCountHandler, MessageLikesHandler,
 MessageDislikesHandler, MessageLikeCountHandler, MessageDislikeCountHandler)
+from flask_cors import CORS
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 @app.route('/')
 def home():

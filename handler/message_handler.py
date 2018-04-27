@@ -99,11 +99,17 @@ class MessageDislikeCountHandler(Resource):
 
 #General Message Handler that returns all messages in the group chat
 class GroupMessageHandler(Resource):
-    def get(self, gName):
-        result = dao.getGroupMessages(gName) #Gets all messages with DAO
-        if (result):
-            return jsonify(Messages=result) #If not null returns all of the group chat messages
-        return {'Error' : "MESSAGES NOT FOUND"}, 404
+    def get(self, groupId):
+        msgList = dao.getGroupMessages(groupId)
+        resultList = []
+        for row in msgList:
+            result = mapToDict(row)
+            resultList.append(result)
+        if (len(resultList)!=0):
+            return jsonify(Messages= resultList)
+        else:
+            return jsonify("NOT FOUND"), 404
+
     def post(self, gName):
         parser = reqparse.RequestParser()
         parser.add_argument('text', type=str, location = 'json')

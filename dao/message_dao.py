@@ -21,11 +21,14 @@ class MessagesDAO:
         return result
 
     #All messages corresponding to a group chat are retrieved 
-    def getGroupMessages(self, gName):
-        for g in self.groupNames:
-            if g == gName:
-                return self.data[self.groupIds[g]]
-        return None
+    def getGroupMessages(self, groupId):    #Maybe add the posibility of IDing groupd by both name and ID.
+        cursor = self.conn.cursor()
+        query = 'select * from messages where groupId = %s'
+        cursor.execute(query,(groupId,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
         
     #A message that corresponds to the given ID is searched in the corresponding group chat
     def getMessage(self, gName, id):

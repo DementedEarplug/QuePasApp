@@ -50,7 +50,7 @@ api.add_resource(MessageHandler, '/QuePasApp/groups/messages/')
 api.add_resource(MessageCountHandler, '/QuePasApp/groups/messages/count/')
 
 #Returns all messages available in the group
-api.add_resource(GroupMessageHandler, '/QuePasApp/groups/<string:gName>/messages')
+api.add_resource(GroupMessageHandler, '/QuePasApp/groups/<int:groupId>/messages')
 
 #Returns a specific message by using its id
 api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>/')

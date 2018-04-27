@@ -27,6 +27,7 @@ class MessagesDAO:
         cursor.execute(query,(groupId,))
         result = []
         for row in cursor:
+            print(row)
             result.append(row)
         return result
         

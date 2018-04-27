@@ -6,9 +6,7 @@ from dao.reactions_dao import ReactionsDAO
 from dao.user_dao import UserDAO
 
 #Construct DAO Instance
-dao = MessagesDAO()
-uDao = UserDAO()
-rDao = ReactionsDAO()
+
 
 def mapToDict(row):
     mappedMsg = {}
@@ -44,6 +42,7 @@ def mapUserToDict(row):
 
 class MessageHandler(Resource):
     def get(self):
+        dao = MessagesDAO()
         msgList = dao.getAllMessages()
         resultList = []
         for row in msgList:
@@ -58,6 +57,7 @@ class MessageHandler(Resource):
 class MessageLikesHandler(Resource):
     # Returns the users who like a message with a given ID.
     def get(self, msgId):
+        rDao = ReactionsDAO()
         userList = rDao.getLikeList(msgId)
         resultList= []
         for row in userList:
@@ -71,6 +71,8 @@ class MessageLikesHandler(Resource):
 class MessageDislikesHandler(Resource):
     # Returns the users who like a message with a given ID.
     def get(self, msgId):
+
+        rDao = ReactionsDAO()
         userList = rDao.getDislikeList(msgId)
         resultList= []
         for row in userList:
@@ -83,6 +85,7 @@ class MessageDislikesHandler(Resource):
 
 class MessageLikeCountHandler(Resource):
     def get(self,msgId):
+        rDao = ReactionsDAO()
         count = rDao.getMsgLikesCount(msgId)
         if not count:
             return jsonify(Error="Not Found"),404
@@ -91,6 +94,7 @@ class MessageLikeCountHandler(Resource):
 
 class MessageDislikeCountHandler(Resource):
     def get(self,msgId):
+        rDao = ReactionsDAO()
         count = rDao.getMsgDislikesCount(msgId)
         if not count:
             return jsonify(Error="Not Found"),404
@@ -100,6 +104,7 @@ class MessageDislikeCountHandler(Resource):
 #General Message Handler that returns all messages in the group chat
 class GroupMessageHandler(Resource):
     def get(self, groupId):
+        dao = MessagesDAO()
         msgList = dao.getGroupMessages(groupId)
         resultList = []
         for row in msgList:
@@ -111,6 +116,7 @@ class GroupMessageHandler(Resource):
             return jsonify("NOT FOUND"), 404
 
     def post(self, gName):
+        dao = MessagesDAO()
         parser = reqparse.RequestParser()
         parser.add_argument('text', type=str, location = 'json')
         parser.add_argument('writerId', type=int, location = 'json')
@@ -124,6 +130,7 @@ class GroupMessageHandler(Resource):
 #to the given id in the current group chat
 class MessageByIdHandler(Resource):
     def get(self, gName, id):
+        dao = MessagesDAO()
         result = dao.getMessage(gName, id) #Gets message that matches message id
         if(result):
             return jsonify(Messages=result) #If not null returns the corresponding message
@@ -134,6 +141,7 @@ class MessageByIdHandler(Resource):
 class MessageReactionHandler(Resource):
     #def get (get reactions for messages)
     def put(self, gName, id):
+        dao = MessagesDAO()
         message = dao.getMessage(gName, id)
         if(message):
             parser = reqparse.RequestParser()
@@ -147,6 +155,7 @@ class MessageReactionHandler(Resource):
 class MessageSearchHandler(Resource):
     def get(self, gName, text):
         containsText = []
+        dao = MessagesDAO()
         messages = dao.getGroupMessages(gName)
         if(messages):
             for m in messages:
@@ -161,6 +170,7 @@ class MessageSearchHandler(Resource):
 #the content, writerID, and current time and date
 class MessagePostHandler(Resource):
     def post(self, gName):
+        dao = MessagesDAO()
         parser = reqparse.RequestParser()
         parser.add_argument('text', type=str, location = 'json')
         parser.add_argument('writerId', type=int, location = 'json')
@@ -172,6 +182,7 @@ class MessagePostHandler(Resource):
 
 class MessageCountHandler(Resource):
     def get(self):
+        dao = MessagesDAO()
         result = dao.getAllMessages()
         if(result):
             count = 0

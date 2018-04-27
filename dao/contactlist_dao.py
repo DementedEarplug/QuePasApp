@@ -2,7 +2,6 @@ from dao.user_dao import UserDAO
 from config import db_config
 import psycopg2
 
-dao = UserDAO()
 
 #Function to map the results of the query into a dictionary.
 def mapToDict(row):

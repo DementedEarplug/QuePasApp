@@ -8,14 +8,14 @@ class ReactionsDAO():
         connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
         self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
 
-    def getMsgLikes(self, msgId):
+    def getMsgLikesCount(self, msgId):
         cursor = self.conn.cursor()
         query = 'select count(*) from likes where msgId= %s'
         cursor.execute(query,(msgId,))
         result = cursor.fetchone()
         return result
 
-    def getMsgDislikes(self, msgId):
+    def getMsgDislikesCount(self, msgId):
         cursor = self.conn.cursor()
         query = 'select count(*) from dislikes where msgId= %s'
         cursor.execute(query,(msgId,))
@@ -24,7 +24,7 @@ class ReactionsDAO():
 
     def getLikeList(self,msgId):
         cursor = self.conn.cursor()
-        query = 'select m2.username from likes as l inner join users as m2 on l.userid= m2.userid where l.msgid = %s;'
+        query = 'select m2.username from likes as l inner join users as m2 on l.userid= m2.userid where l.msgId = %s;'
         cursor.execute(query,(msgId,))
         result=[]
         for row in cursor:
@@ -33,7 +33,7 @@ class ReactionsDAO():
     
     def getDislikeList(self,msgId):
         cursor = self.conn.cursor()
-        query = 'select m2.username from dislikes as dl inner join users as m2 on dl.userid= m2.userid where dl.msgid = %s;'
+        query = 'select m2.username from dislikes as dl inner join users as m2 on dl.userid= m2.userid where dl.msgId = %s;'
         cursor.execute(query,(msgId,))
         result=[]
         for row in cursor:

@@ -1,10 +1,14 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
-from handler.user_handler import UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, GetByUsernameHandler, ContactListHandler
+from handler.user_handler import (UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, 
+GetByUsernameHandler, ContactListHandler)
 from dao.group_chat_dao import ChatDAO
-from handler.group_chat_handler import GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander
+from handler.group_chat_handler import (GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, 
+GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander)
 from dao.message_dao import MessagesDAO
-from handler.message_handler import MessageHandler, MessageByIdHandler, MessageReactionHandler, MessageSearchHandler, MessagePostHandler, GroupMessageHandler, MessageCountHandler, MessageLikesHandler, MessageDislikesHandler
+from handler.message_handler import (MessageHandler, MessageByIdHandler, MessageReactionHandler, 
+MessageSearchHandler, MessagePostHandler, GroupMessageHandler, MessageCountHandler, MessageLikesHandler,
+MessageDislikesHandler, MessageLikeCountHandler, MessageDislikeCountHandler)
 
 app = Flask(__name__)
 api = Api(app)
@@ -52,13 +56,16 @@ api.add_resource(GroupMessageHandler, '/QuePasApp/groups/<string:gName>/messages
 api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>/')
 
 #Returns list of users that like a specific message by using its id
-api.add_resource(MessageLikesHandler, '/QuePasApp/groups/messages/<int:msgId>/likes')
+api.add_resource(MessageLikesHandler, '/QuePasApp/messages/<int:msgId>/likes')
 
 #Returns list of users that dislike a specific message by using its id
-api.add_resource(MessageDislikesHandler, '/QuePasApp/groups/messages/<int:msgId>/dislikes')
+api.add_resource(MessageDislikesHandler, '/QuePasApp/messages/<int:msgId>/dislikes')
 
-#Returns the count os likes in a specific message by using its id
-#api.add_resource(MessageByIdHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>/likeCount')
+#Returns the count of likes in a specific message by using its id
+api.add_resource(MessageLikeCountHandler, '/QuePasApp/messages/<int:msgId>/likeCount')
+
+#Returns the count of dislikes in a specific message by using its id
+api.add_resource(MessageDislikeCountHandler, '/QuePasApp/messages/<int:msgId>/dislikeCount')
 
 #Adds a reaction to the message that corresponds to the Id
 api.add_resource(MessageReactionHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')

@@ -81,7 +81,22 @@ class MessageDislikesHandler(Resource):
         else:
             return jsonify("NOT FOUND"), 404
 
-    
+class MessageLikeCountHandler(Resource):
+    def get(self,msgId):
+        count = rDao.getMsgLikesCount(msgId)
+        if not count:
+            return jsonify(Error="Not Found"),404
+        else:
+            return jsonify(Likes= count)
+
+class MessageDislikeCountHandler(Resource):
+    def get(self,msgId):
+        count = rDao.getMsgDislikesCount(msgId)
+        if not count:
+            return jsonify(Error="Not Found"),404
+        else:
+            return jsonify(Dislikes= count)          
+
 #General Message Handler that returns all messages in the group chat
 class GroupMessageHandler(Resource):
     def get(self, gName):

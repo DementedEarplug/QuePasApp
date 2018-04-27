@@ -49,7 +49,7 @@ class UserByNameHandler(Resource):
     def get(self, uFirstName):
         row = dao.searchByName(uFirstName)
         if not row:
-            return jsonify(Error="User with First Name: %s not gound"%uFirstName),404
+            return jsonify(Error="User with First Name: %s not found"%uFirstName),404
         else:
             user= mapToDict(row)
             return jsonify(User= user)
@@ -61,7 +61,7 @@ class UserByLastNameHandler(Resource):
     def get(self, uLastname):
         row = dao.searchByLName(uLastname)
         if not row:
-            return jsonify(Error="User with Last Name: %s not gound"%uLastname),404
+            return jsonify(Error="User with Last Name: %s not found"%uLastname),404
         else:
             user= mapToDict(row)
             return jsonify(User= user)
@@ -71,7 +71,7 @@ class GetByUsernameHandler(Resource):
     def get(self, username):
         row = dao.searchByUsername(username)
         if not row:
-            return jsonify(Error="User with username: %s not gound"%username),404
+            return jsonify(Error="User with username: %s not found"%username),404
         else:
             user= mapToDict(row)
             return jsonify(User= user)

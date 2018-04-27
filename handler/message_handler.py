@@ -12,10 +12,12 @@ def mapToDict(row):
     mappedMsg = {}
     mappedMsg['msgId'] = row[0]
     mappedMsg['content'] = row[1]
-    mappedMsg['userId'] = row[2]
-    mappedMsg['groupId'] = row[3]
-    mappedMsg['postDate'] = str(row[4])
-    mappedMsg['postTime'] = str(row[5])
+    mappedMsg['username'] = row[2]
+    mappedMsg['likes'] = row[3]
+    mappedMsg['dislikes'] = row[4]
+    # mappedMsg['groupId'] = row[3]
+    # mappedMsg['postDate'] = str(row[4])
+    # mappedMsg['postTime'] = str(row[5])
     return mappedMsg
 
 def mapLikesToDiCt(row):

@@ -105,5 +105,5 @@ api.add_resource(UsersInGroupHandler, '/QuePasApp/groups/<int:groupId>/participa
 
 
 if(__name__=='__main__'):
-    app.run(debug = True, port = 8080)
+    app.run(debug = True, host= '192.168.0.5', port = 80)
     

@@ -30,7 +30,20 @@ class UserHandler(Resource):
             result = mapToDict(row)
             resultList.append(result)
         if (len(resultList)!=0):
-            return jsonify(User= resultList)
+            return jsonify(Users= resultList)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class UsersInGroupHandler(Resource):
+    #Returns all the users in the system
+    def get(self, groupId):
+        userList = dao.getAllUsersByChat(groupId)
+        resultList = []
+        for row in userList:
+            result = mapToDict(row)
+            resultList.append(result)
+        if (len(resultList)!=0):
+            return jsonify(Users= resultList)
         else:
             return jsonify("NOT FOUND"), 404
 

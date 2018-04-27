@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from handler.user_handler import (UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, 
-GetByUsernameHandler, ContactListHandler)
+GetByUsernameHandler, ContactListHandler, UsersInGroupHandler)
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import (GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, 
 GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander)
@@ -25,9 +25,6 @@ api.add_resource(GroupHandler, '/QuePasApp/groups/') #done
 
 #return a single group
 api.add_resource(GroupByIndexHandler,'/QuePasApp/groups/<int:groupId>/') 
-
-#returns every participants of a group
-api.add_resource(GroupParticipantsHandler, '/QuePasApp/groups/<int:groupId>/participants/') 
 
 #returns every group where user is owner
 api.add_resource(GroupByOwnerHandler, '/QuePasApp/groups/user/<int:userId>/') 
@@ -100,6 +97,9 @@ api.add_resource(GetByUsernameHandler,'/QuePasApp/users/username/<string:usernam
 
 #Displays contact list of a user with a given ID
 api.add_resource(ContactListHandler, '/QuePasApp/users/<int:ownerId>/contactlist')
+
+# Displays every participants of a group
+api.add_resource(UsersInGroupHandler, '/QuePasApp/groups/<int:groupId>/participants/')
 
 
 if(__name__=='__main__'):

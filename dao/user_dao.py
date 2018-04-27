@@ -17,6 +17,16 @@ class UserDAO:
             result.append(ror)
         return result
 
+    # Displays all the users in the system with their information.
+    def getAllUsersByChat(self, groupId):
+        cursor = self.conn.cursor()
+        query = 'select userId, FirstName, LastName, username, phoneNumber, email from users natural inner join participants where groupId = %s;'
+        cursor.execute(query,(groupId,))
+        result = []
+        for ror in cursor:
+            result.append(ror)
+        return result
+
     # Search user info given a user id.
     def getUserById(self, userId):
         cursor = self.conn.cursor()

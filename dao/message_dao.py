@@ -23,7 +23,7 @@ class MessagesDAO:
     #All messages corresponding to a group chat are retrieved 
     def getGroupMessages(self, groupId):    #Maybe add the posibility of IDing groupd by both name and ID.
         cursor = self.conn.cursor()
-        query = 'select msgId, content, username, (select count(*) from likes where likes.msgId = messages.msgId), (select count(*) from dislikes where dislikes.msgId = messages.msgId) as dislikes from messages natural inner join users where groupId = %s'
+        query = 'select msgId, content, username, (select count(*) from likes where likes.msgId = messages.msgId) as likes, (select count(*) from dislikes where dislikes.msgId = messages.msgId) as dislikes from messages natural inner join users where groupId = %s'
         cursor.execute(query,(groupId,))
         result = cursor.fetchall()
         return result

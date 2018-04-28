@@ -103,6 +103,9 @@ api.add_resource(ContactListHandler, '/QuePasApp/users/<int:ownerId>/contactlist
 # Displays every participants of a group
 api.add_resource(UsersInGroupHandler, '/QuePasApp/groups/<int:groupId>/participants/')
 
+# User login endpoint
+api.add_resource(UserLoginHandler, '/QuePasApp/login')
+
 
 if(__name__=='__main__'):
     app.run(debug = True, host= '192.168.0.5', port = 80)

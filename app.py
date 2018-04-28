@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from handler.user_handler import (UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, 
-GetByUsernameHandler, ContactListHandler, UsersInGroupHandler)
+GetByUsernameHandler, ContactListHandler, UsersInGroupHandler, UserLoginHandler)
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import (GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, 
 GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander)

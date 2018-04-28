@@ -113,7 +113,7 @@ class UserLoginHandler(Resource):
         
         row = dao.login(args['email'], args['password'])
         if not row:
-            return jsonify(Error="Invalid Login"),404
+            return {'Error' : "Invalid Login"},404
         else:
             user= mapToDict(row)
             return jsonify(User= user)

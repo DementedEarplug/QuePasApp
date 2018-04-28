@@ -105,7 +105,7 @@ class ContactListHandler(Resource):
         
 class UserLoginHandler(Resource):
     # Search a user with a given username.
-    def get(self, username, password):
+    def post(self, username, password):
         parser = reqparse.RequestParser()
         parser.add_argument('username', type=str, location = 'json')
         parser.add_argument('password', type=str, location = 'json')

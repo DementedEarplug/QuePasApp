@@ -15,7 +15,8 @@ def mapToDict(row):
     mappedMsg['username'] = row[2]
     mappedMsg['likes'] = row[3]
     mappedMsg['dislikes'] = row[4]
-    # mappedMsg['groupId'] = row[3]
+    mappedMsg['isReply'] = row[5]
+    mappedMsg['repliesTo'] = row[6]
     # mappedMsg['postDate'] = str(row[4])
     # mappedMsg['postTime'] = str(row[5])
     return mappedMsg

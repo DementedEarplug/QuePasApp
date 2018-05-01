@@ -102,3 +102,18 @@ class ContactListHandler(Resource):
             return jsonify(Contacts= resultList)
         else:
             return jsonify("NOT FOUND"), 404
+        
+class UserLoginHandler(Resource):
+    # Search a user with a given username.
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', type=str, location = 'json')
+        parser.add_argument('password', type=str, location = 'json')
+        args = parser.parse_args(strict=True)
+        
+        row = dao.login(args['email'], args['password'])
+        if not row:
+            return {'Error' : "Invalid Login"},404
+        else:
+            user= mapToDict(row)
+            return jsonify(User= user)

@@ -58,3 +58,11 @@ class UserDAO:
         cursor.execute(query,(Lname,))
         result = cursor.fetchone()
         return result
+    
+    # Search user by email and password
+    def login(self, email, password):
+        cursor = self.conn.cursor()
+        query = "select userId, FirstName, LastName, username, phoneNumber, email from users where email = %s and userPassword = %s;"
+        cursor.execute(query,(email, password,))
+        result = cursor.fetchone()
+        return result

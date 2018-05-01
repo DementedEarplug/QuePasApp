@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from handler.user_handler import (UserByIdHandler, UserHandler, UserByNameHandler, UserByLastNameHandler, 
-GetByUsernameHandler, ContactListHandler, UsersInGroupHandler)
+GetByUsernameHandler, ContactListHandler, UsersInGroupHandler, UserLoginHandler)
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import (GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, 
 GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander)
@@ -9,9 +9,11 @@ from dao.message_dao import MessagesDAO
 from handler.message_handler import (MessageHandler, MessageByIdHandler, MessageReactionHandler, 
 MessageSearchHandler, MessagePostHandler, GroupMessageHandler, MessageCountHandler, MessageLikesHandler,
 MessageDislikesHandler, MessageLikeCountHandler, MessageDislikeCountHandler)
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 @app.route('/')
 def home():
@@ -101,7 +103,10 @@ api.add_resource(ContactListHandler, '/QuePasApp/users/<int:ownerId>/contactlist
 # Displays every participants of a group
 api.add_resource(UsersInGroupHandler, '/QuePasApp/groups/<int:groupId>/participants/')
 
+# User login endpoint
+api.add_resource(UserLoginHandler, '/QuePasApp/login')
+
 
 if(__name__=='__main__'):
-    app.run(debug = True, port = 8080)
+    app.run(debug = True, host= '192.168.0.5', port = 80)
     

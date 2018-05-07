@@ -6,7 +6,18 @@ from dao.reactions_dao import ReactionsDAO
 from dao.user_dao import UserDAO
 
 #Construct DAO Instance
-
+def mapAllMessages(row):
+    mappedMsg = {}
+    mappedMsg['msgId'] = row[0]
+    mappedMsg['content'] = row[1]
+    mappedMsg['userid'] = row[2]
+    mappedMsg['groupid'] = row[3]
+    # mappedMsg['dislikes'] = row[4]
+    # mappedMsg['isReply'] = row[5]
+    # mappedMsg['repliesTo'] = row[6]
+    mappedMsg['postDate'] = str(row[4])
+    mappedMsg['postTime'] = str(row[5])
+    return mappedMsg
 
 def mapToDict(row):
     mappedMsg = {}
@@ -49,7 +60,7 @@ class MessageHandler(Resource):
         msgList = dao.getAllMessages()
         resultList = []
         for row in msgList:
-            result = mapToDict(row)
+            result = mapAllMessages(row)
             resultList.append(result)
         if (len(resultList)!=0):
             return jsonify(Messages= resultList)

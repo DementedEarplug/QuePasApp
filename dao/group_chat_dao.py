@@ -16,10 +16,10 @@ class ChatDAO:
         result = cursor.fetchone()
         return result
 
-    def getGroupsByUserID(self, userID):
+    def getGroupsByUserID(self, userId):
         cursor = self.conn.cursor()
         query = "select groupName, groupId, ownerId from groups natural inner join participants natural inner join users where userId = %s;"
-        cursor.execute(query,(userID,))
+        cursor.execute(query,(userId,))
         result = []
         for row in cursor:
             result.append(row)

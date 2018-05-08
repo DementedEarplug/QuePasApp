@@ -109,15 +109,15 @@ class GroupParticipantsHandler(Resource):
         return jsonify(Participants = result)
 #for /QuePasApp/users/<int:userID>/groups/
 class UserGroupsHandler(Resource): #Get all groups where user is participant
-    def get(self, userID):
+    def get(self, userId):
         dao = ChatDAO()
-        inList = isInList(userID)
-        if not in list end
-        if not(inList):
+        #inList = isInList(userId)
+        #if not in list end
+        #if not(inList):
             #print 'Here'
-            return {"Error":"User not found"}, 404
+        #    return {"Error":"User not found"}, 404
 
-        result = dao.getUserGroups(userID)
+        result = dao.getGroupsByUserID(userId)
         if(len(result) == 0):
             return {"Error":"User does not belongs to any group"}, 404
         groupList = []

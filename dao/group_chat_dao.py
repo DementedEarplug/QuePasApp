@@ -7,7 +7,7 @@ class ChatDAO:
     def __init__(self):
         #maybe jsut add el url del DB directly?
         connection_url = "dbname=%s user=%s password=%s" % (db_config['dbname'],  db_config['user'], db_config['passwd'])
-        self.conn = psycopg2._connect('postgres://ekabibbfjhmljk:ea67f5fef908e608149d9ebbdffa8fc365f8178649299422e5fa91c5c9e1eaf6@ec2-54-163-240-54.compute-1.amazonaws.com:5432/dfsgi0mppudcls')
+        self.conn = psycopg2._connect('postgres://rdoycbxokxgmsz:d9980f20415499517e3caacaa67ee00376d331677988af4b8c4887fc65235efc@ec2-75-101-142-91.compute-1.amazonaws.com:5432/d2o9j3bddfg00r')
     
     def getGroupByID(self, groupId):
         cursor = self.conn.cursor()
@@ -17,11 +17,18 @@ class ChatDAO:
         return result
 
     def getGroupsByUserID(self, userID):
-        result = {}
-        for g in self.data:
-            if g['userID']==userID:
-                result[g['id']]=g
+        cursor = self.conn.cursor()
+        query = "select groupName, groupId, ownerId from groups natural inner join participants natural inner join users where userId = %s;"
+        cursor.execute(query,(userID,))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
+        #  result = {}
+        # for g in self.data:
+        #     if g['userID']==userID:
+        #         result[g['id']]=g
+        # return result
 
 
     def getUserGroups(self, userID):

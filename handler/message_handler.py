@@ -72,6 +72,7 @@ class SendMessageHandler(Resource):
     def post(self):
        dao = MessagesDAO()
        mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+       print(request.get_json())
        return {"msgId":mid}
         # dao = MessagesDAO()
 
@@ -153,11 +154,12 @@ class GroupMessageHandler(Resource):
 #Specific Message Handler that returns messages that corresponds 
 #to the given id in the current group chat
 class MessageByIdHandler(Resource):
-    def get(self, gName, id):
+    def get(self,id):
         dao = MessagesDAO()
-        result = dao.getMessage(gName, id) #Gets message that matches message id
+        print "Here",id
+        result = dao.getMessage(id) #Gets message that matches message id
         if(result):
-            return jsonify(Messages=result) #If not null returns the corresponding message
+            return jsonify(result) #If not null returns the corresponding message
         return {'Error' : "MESSAGE NOT FOUND"}, 404
         
 #This handler will change the reaction status of the message 

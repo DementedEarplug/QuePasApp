@@ -15,6 +15,18 @@ class ChatDAO:
         cursor.execute(query,(groupId,))
         result = cursor.fetchone()
         return result
+    def addUserToGroup(self, uid, gid):
+        cursor = self.conn.cursor()
+        query = "select count(*) from participants where userid = %s and groupid = %s"
+        cursor.execute(query, [uid, gid])
+        if(cursor.fetchone()[0]==0):
+
+            query = "Insert into participants (userid, groupid) Values(%s, %s)"
+            cursor.execute(query, [uid, gid])
+            self.conn.commit()
+            return 201
+        else:
+            return 403
 
     def getGroupsByUserID(self, userId):
         cursor = self.conn.cursor()

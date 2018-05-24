@@ -49,13 +49,20 @@ class MessagesDAO:
 
         
     #A message that corresponds to the given ID is searched in the corresponding group chat
-    def getMessage(self, gName, id):
-        for g in self.groupNames:
-            if g == gName:
-                for m in self.data[self.groupIds[g]]:
-                    if id == m['id']:
-                        return m
-        return None
+    def getMessage(self, id):
+        cursor = self.conn.cursor()
+        query = 'Select * from messages where msgid = %s'
+        cursor.execute(query,[id])
+        result = cursor.fetchone()
+        print(result)
+        res = []
+        for r in result:
+            res.append(str(r))
+        print(res)
+        if result:
+            return {'Message': res}
+        else: 
+            return None
     
     #A message is posted into the corresponding group chat using the latest message id,
     #a given content, writerID, groupID, and current time and date

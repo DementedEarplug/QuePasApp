@@ -56,6 +56,14 @@ class GroupHandler(Resource):
             return jsonify(Groups= resultList)
         else:
             return jsonify(Error="Not Found"),404
+class JoinGroupHandler(Resource):
+    def post(self, groupId, userId):
+        dao = ChatDAO()
+        resp = dao.addUserToGroup(userId, groupId)
+        if resp==201:
+            return jsonify(Message = "User added to group")
+        else:
+            return jsonify(Message="User Already Member of group")
 
 #for /QuePasApp/groups/<int:id>
 class GroupByIndexHandler(Resource):

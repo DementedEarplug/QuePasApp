@@ -16,6 +16,26 @@ class UserDAO:
         for ror in cursor:
             result.append(ror)
         return result
+    
+    def addUser(self, uName, uLName, username, passwd, phoneNumber, email):
+        cursor = self.conn.cursor()
+        query = 'select count(*) from users where username = %s or email = %s or phonenumber = %s'
+        query = "Select Case when (select count(*) from users where email = %s )>0 then \'yes\' else \'no\' end as emailTest, Case when (select count(*) from users where username = %s )>0 then \'yes\' else \'no\' end as usernameTest, Case when (select count(*) from users where phonenumber = %s )>0 then \'yes\' else \'no\' end as phoneTest from users group by emailTest"
+        cursor.execute(query, [email, username, phoneNumber])
+        conflicts = cursor.fetchone()
+        if (conflicts[0]=='yes'):
+            return 'email already registered',403
+        elif(conflicts[1]=='yes'):
+            return 'username already taken',403
+        elif(conflicts[2]=='yes'):
+            return 'phonenumber is already registered', 403
+        else:
+            query = 'insert into users (firstname, lastname, username, userpassword, phonenumber, email) values(%s, %s, %s, %s, %s, %s)'
+            cursor.execute(query, [uName, uLName, username, passwd, phoneNumber, email])
+            self.conn.commit()
+            return 'user created',201
+        # else:
+        #     return 403
 
     # Displays all the users in the system with their information.
     def getAllUsersByChat(self, groupId):

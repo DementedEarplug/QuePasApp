@@ -9,6 +9,7 @@ from dao.message_dao import MessagesDAO
 from handler.message_handler import (MessageHandler, MessageByIdHandler, MessageReactionHandler, 
 MessageSearchHandler, MessagePostHandler, GroupMessageHandler, MessageCountHandler, MessageLikesHandler,
 MessageDislikesHandler, MessageLikeCountHandler, MessageDislikeCountHandler)
+import handler.message_handler as mHand
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
@@ -44,6 +45,8 @@ api.add_resource(UserGroupsHandler, '/QuePasApp/users/<int:userId>/groups/')
 
 #Returns all messages
 api.add_resource(MessageHandler, '/QuePasApp/groups/messages/')
+
+api.add_resource(mHand.SendMessageHandler, '/QuePasApp/groups/messages/send')
 
 #Returns count of all messages
 api.add_resource(MessageCountHandler, '/QuePasApp/groups/messages/count/')

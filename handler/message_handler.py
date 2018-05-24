@@ -1,9 +1,10 @@
 from flask_restful import Resource
-from flask import Response, jsonify
+from flask import Response, jsonify, request
 from flask_restful import reqparse
 from dao.message_dao import MessagesDAO
 from dao.reactions_dao import ReactionsDAO
 from dao.user_dao import UserDAO
+import json
 
 #Construct DAO Instance
 def mapAllMessages(row):
@@ -66,6 +67,15 @@ class MessageHandler(Resource):
             return jsonify(Messages= resultList)
         else:
             return jsonify("NOT FOUND"), 404
+
+class SendMessageHandler(Resource):
+    def post(self):
+       dao = MessagesDAO()
+       mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+       return {"msgId":mid}
+        # dao = MessagesDAO()
+
+        
         
     
 class MessageLikesHandler(Resource):

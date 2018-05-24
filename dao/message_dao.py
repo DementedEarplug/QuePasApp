@@ -1,6 +1,7 @@
 from flask import jsonify
 import psycopg2
 from config import db_config
+from datetime import datetime
 
 #Message Data Access object that retrieves data from the DB (currently hardcoded)
 class MessagesDAO:
@@ -35,6 +36,17 @@ class MessagesDAO:
         cursor.execute(query,(groupId,))
         result = cursor.fetchall()
         return result
+    def sendMessage(self, authorId, groupId, content):
+        cursor = self.conn.cursor()
+        fulldate = datetime.now()
+        postdate = str(fulldate).split(' ')[0]
+        posttime = str(fulldate).split(' ')[1]
+        query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s)"
+        cursor.execute(query, [authorId, groupId, content, postdate, posttime])
+        self.conn.commit()
+        cursor.execute("Select msgid from messages where postdate = %s and posttime = %s", [postdate, posttime])
+        return cursor.fetchone()[0]
+
         
     #A message that corresponds to the given ID is searched in the corresponding group chat
     def getMessage(self, gName, id):

@@ -72,8 +72,14 @@ class SendMessageHandler(Resource):
     def post(self):
        dao = MessagesDAO()
        mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
-       print(request.get_json())
-       return {"msgId":mid}
+       content = request.form['content']
+       hashtagCheck = str(content).split(' ')
+       for part in hashtagCheck:
+           if(part[0]=='#'):
+            dao.addHashtag(mid, part)
+
+       return "This"
+    # return {"msgId":mid}
         # dao = MessagesDAO()
 
         

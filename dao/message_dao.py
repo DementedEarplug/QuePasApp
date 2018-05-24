@@ -86,6 +86,11 @@ class MessagesDAO:
         self.conn.commit()
         cursor.execute("Select msgid from messages where postdate = %s and posttime = %s", [postdate, posttime])
         return cursor.fetchone()[0]
+    def addHashtag(self, msgid, hashtag):
+        query = "insert into hashtags (msgid, hashtagcontent) values(%s, %s)"
+        cursor = self.conn.cursor()
+        cursor.execute(query,[msgid, hashtag])
+        self.conn.commit()
 
         
     #A message that corresponds to the given ID is searched in the corresponding group chat

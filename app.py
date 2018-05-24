@@ -108,5 +108,5 @@ api.add_resource(UserLoginHandler, '/QuePasApp/login')
 
 
 if(__name__=='__main__'):
-    app.run(debug = True, host= '192.168.0.5', port = 80)
+    app.run(debug = True, port = 8000)
     

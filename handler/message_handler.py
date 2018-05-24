@@ -92,6 +92,20 @@ class MessageLikesHandler(Resource):
             return jsonify(Users= resultList)
         else:
             return jsonify("NOT FOUND"), 404
+class AddLikeHandler(Resource):
+    def post(self):
+        userid = request.form['userid']
+        msgid = request.form['msgid']
+        dao = MessagesDAO()
+        return dao.likeMessage(userid, msgid)
+class AddDislikeHandler(Resource):
+    def post(self):
+        userid = request.form['userid']
+        msgid = request.form['msgid']
+        dao = MessagesDAO()
+        return dao.dislikeMessage(userid, msgid)
+        
+        
 
 class MessageDislikesHandler(Resource):
     # Returns the users who like a message with a given ID.

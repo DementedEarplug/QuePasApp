@@ -55,6 +55,10 @@ api.add_resource(mHand.MessageByIdHandler, '/QuePasApp/messages/<int:id>/')
 #Returns list of users that like a specific message by using its id
 api.add_resource(mHand.MessageLikesHandler, '/QuePasApp/messages/<int:msgId>/likes')
 
+api.add_resource(mHand.AddLikeHandler, '/QuePasApp/messages/sendLike')
+
+api.add_resource(mHand.AddDislikeHandler, '/QuePasApp/messages/sendDislike')
+
 #Returns list of users that dislike a specific message by using its id
 api.add_resource(mHand.MessageDislikesHandler, '/QuePasApp/messages/<int:msgId>/dislikes')
 

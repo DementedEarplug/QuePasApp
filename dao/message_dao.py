@@ -20,7 +20,47 @@ class MessagesDAO:
         for row in cursor:
             result.append(row)
         return result
-
+    def likeMessage(self, userid, msgid):
+        cursor = self.conn.cursor()
+        query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"
+        cursor.execute(query, [userid, msgid])
+        result = cursor.fetchone()
+        if(result[0]>0 and result[1]>0):
+            query = "select count(*) from likes where userid = %s and msgid = %s"
+            cursor.execute(query, [userid, msgid])
+            if(cursor.fetchone()[0]==0):
+                query = "insert into likes (userid, msgid) values(%s, %s)"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Like Added to message", 201
+            else:
+                query = "delete from likes where userid = %s and msgid = %s"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Like removed from messages", 201
+        else:
+            return "User or message does not exist",404
+    def dislikeMessage(self, userid, msgid):
+        cursor = self.conn.cursor()
+        query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"
+        cursor.execute(query, [userid, msgid])
+        result = cursor.fetchone()
+        if(result[0]>0 and result[1]>0):
+            query = "select count(*) from dislikes where userid = %s and msgid = %s"
+            cursor.execute(query, [userid, msgid])
+            if(cursor.fetchone()[0]==0):
+                query = "insert into dislikes (userid, msgid) values(%s, %s)"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Dislike Added to message", 201
+            else:
+                query = "delete from dislikes where userid = %s and msgid = %s"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Dislike removed from messages", 201
+        else:
+            return "User or message does not exist",404
+        
     #All messages corresponding to a group chat are retrieved 
     def getGroupMessages(self, groupId):    #Maybe add the posibility of IDing groupd by both name and ID.
         cursor = self.conn.cursor()

@@ -19,8 +19,13 @@ class UserDAO:
     
     def addUser(self, uName, uLName, username, passwd, phoneNumber, email):
         cursor = self.conn.cursor()
-        query = 'select count(*) from users where username = %s or email = %s or phonenumber = %s'
-        query = "Select Case when (select count(*) from users where email = %s )>0 then \'yes\' else \'no\' end as emailTest, Case when (select count(*) from users where username = %s )>0 then \'yes\' else \'no\' end as usernameTest, Case when (select count(*) from users where phonenumber = %s )>0 then \'yes\' else \'no\' end as phoneTest from users group by emailTest"
+        q1 = "Select Case when (select count(*) from users where email = %s )>0 "
+        q2 =  "then \'yes\' else \'no\' end as emailTest, "
+        q3 = "Case when (select count(*) from users where username = %s )>0 "
+        q4 = "then \'yes\' else \'no\' end as usernameTest, "
+        q5 = "Case when (select count(*) from users where phonenumber = %s )>0 "
+        q6 = "then \'yes\' else \'no\' end as phoneTest from users group by emailTest"
+        query = q1 + q2 + q3 + q4 + q5 + q6
         cursor.execute(query, [email, username, phoneNumber])
         conflicts = cursor.fetchone()
         if (conflicts[0]=='yes'):

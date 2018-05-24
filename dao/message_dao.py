@@ -86,6 +86,11 @@ class MessagesDAO:
         self.conn.commit()
         cursor.execute("Select msgid from messages where postdate = %s and posttime = %s", [postdate, posttime])
         return cursor.fetchone()[0]
+    def sendReply(self, fromId, toId):
+        cursor = self.conn.cursor()
+        query = "Insert into replies(repliedtoid, msgid) values(%s, %s)"
+        cursor.execute(query, [toId, fromId])
+        self.conn.commit()
     def addHashtag(self, msgid, hashtag):
         query = "insert into hashtags (msgid, hashtagcontent) values(%s, %s)"
         cursor = self.conn.cursor()

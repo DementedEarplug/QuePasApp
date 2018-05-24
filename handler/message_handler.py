@@ -78,9 +78,21 @@ class SendMessageHandler(Resource):
            if(part[0]=='#'):
             dao.addHashtag(mid, part)
 
-       return "This"
-    # return {"msgId":mid}
-        # dao = MessagesDAO()
+       return {"msgId":mid}
+
+class sendReplyHandler(Resource):
+    def post(self):
+        dao = MessagesDAO()
+        mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+        content = request.form['content']
+        hashtagCheck = str(content).split(' ')
+        for part in hashtagCheck:
+           if(part[0]=='#'):
+            dao.addHashtag(mid, part)
+        
+        dao.sendReply(mid, request.form['msgid'])
+
+        return {"msgId":mid}
 
         
         

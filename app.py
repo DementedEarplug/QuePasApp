@@ -43,6 +43,8 @@ api.add_resource(mHand.MessageHandler, '/QuePasApp/messages/all')
 
 api.add_resource(mHand.SendMessageHandler, '/QuePasApp/messages/send')
 
+api.add_resource(mHand.sendReplyHandler, '/QuePasApp/messages/sendReply')
+
 #Returns count of all messages
 api.add_resource(mHand.MessageCountHandler, '/QuePasApp/messages/count/')
 

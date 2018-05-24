@@ -4,7 +4,7 @@ from handler.user_handler import (UserByIdHandler, UserHandler, UserByNameHandle
 GetByUsernameHandler, ContactListHandler, UsersInGroupHandler, UserLoginHandler)
 from dao.group_chat_dao import ChatDAO
 from handler.group_chat_handler import (GroupHandler, GroupByIndexHandler, GroupByOwnerHandler, 
-GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHander)
+GroupParticipantsHandler, GroupOwnerHandler, UserGroupsHandler)
 from dao.message_dao import MessagesDAO
 from handler.message_handler import (MessageHandler, MessageByIdHandler, MessageReactionHandler, 
 MessageSearchHandler, MessagePostHandler, GroupMessageHandler, MessageCountHandler, MessageLikesHandler,
@@ -35,7 +35,7 @@ api.add_resource(GroupByOwnerHandler, '/QuePasApp/groups/user/<int:userId>/')
 api.add_resource(GroupOwnerHandler, '/QuePasApp/groups/<int:groupId>/owner/')
 
 #returns every groups where user is participant
-api.add_resource(UserGroupsHander, '/QuePasApp/users/<int:userId>/groups/') 
+api.add_resource(UserGroupsHandler, '/QuePasApp/users/<int:userId>/groups/') 
 
 
 #============================#

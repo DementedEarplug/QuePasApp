@@ -28,6 +28,6 @@ class ContactlistDAO():
 
          
 
-    def getContactlistOwner():
-        return self.data[1]
+    #def getContactlistOwner():
+    #    return self.data[1]
     

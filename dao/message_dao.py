@@ -1,6 +1,7 @@
 from flask import jsonify
 import psycopg2
 from config import db_config
+from datetime import datetime
 
 #Message Data Access object that retrieves data from the DB (currently hardcoded)
 class MessagesDAO:
@@ -19,7 +20,47 @@ class MessagesDAO:
         for row in cursor:
             result.append(row)
         return result
-
+    def likeMessage(self, userid, msgid):
+        cursor = self.conn.cursor()
+        query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"
+        cursor.execute(query, [userid, msgid])
+        result = cursor.fetchone()
+        if(result[0]>0 and result[1]>0):
+            query = "select count(*) from likes where userid = %s and msgid = %s"
+            cursor.execute(query, [userid, msgid])
+            if(cursor.fetchone()[0]==0):
+                query = "insert into likes (userid, msgid) values(%s, %s)"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Like Added to message", 201
+            else:
+                query = "delete from likes where userid = %s and msgid = %s"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Like removed from messages", 201
+        else:
+            return "User or message does not exist",404
+    def dislikeMessage(self, userid, msgid):
+        cursor = self.conn.cursor()
+        query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"
+        cursor.execute(query, [userid, msgid])
+        result = cursor.fetchone()
+        if(result[0]>0 and result[1]>0):
+            query = "select count(*) from dislikes where userid = %s and msgid = %s"
+            cursor.execute(query, [userid, msgid])
+            if(cursor.fetchone()[0]==0):
+                query = "insert into dislikes (userid, msgid) values(%s, %s)"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Dislike Added to message", 201
+            else:
+                query = "delete from dislikes where userid = %s and msgid = %s"
+                cursor.execute(query, [userid, msgid])
+                self.conn.commit()
+                return "Dislike removed from messages", 201
+        else:
+            return "User or message does not exist",404
+        
     #All messages corresponding to a group chat are retrieved 
     def getGroupMessages(self, groupId):    #Maybe add the posibility of IDing groupd by both name and ID.
         cursor = self.conn.cursor()
@@ -35,15 +76,43 @@ class MessagesDAO:
         cursor.execute(query,(groupId,))
         result = cursor.fetchall()
         return result
+    def sendMessage(self, authorId, groupId, content):
+        cursor = self.conn.cursor()
+        fulldate = datetime.now()
+        postdate = str(fulldate).split(' ')[0]
+        posttime = str(fulldate).split(' ')[1]
+        query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s)"
+        cursor.execute(query, [authorId, groupId, content, postdate, posttime])
+        self.conn.commit()
+        cursor.execute("Select msgid from messages where postdate = %s and posttime = %s", [postdate, posttime])
+        return cursor.fetchone()[0]
+    def sendReply(self, fromId, toId):
+        cursor = self.conn.cursor()
+        query = "Insert into replies(repliedtoid, msgid) values(%s, %s)"
+        cursor.execute(query, [toId, fromId])
+        self.conn.commit()
+    def addHashtag(self, msgid, hashtag):
+        query = "insert into hashtags (msgid, hashtagcontent) values(%s, %s)"
+        cursor = self.conn.cursor()
+        cursor.execute(query,[msgid, hashtag])
+        self.conn.commit()
+
         
     #A message that corresponds to the given ID is searched in the corresponding group chat
-    def getMessage(self, gName, id):
-        for g in self.groupNames:
-            if g == gName:
-                for m in self.data[self.groupIds[g]]:
-                    if id == m['id']:
-                        return m
-        return None
+    def getMessage(self, id):
+        cursor = self.conn.cursor()
+        query = 'Select * from messages where msgid = %s'
+        cursor.execute(query,[id])
+        result = cursor.fetchone()
+        print(result)
+        res = []
+        for r in result:
+            res.append(str(r))
+        print(res)
+        if result:
+            return {'Message': res}
+        else: 
+            return None
     
     #A message is posted into the corresponding group chat using the latest message id,
     #a given content, writerID, groupID, and current time and date

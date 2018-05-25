@@ -1,9 +1,10 @@
 from flask_restful import Resource
-from flask import Response, jsonify
+from flask import Response, jsonify, request
 from flask_restful import reqparse
 from dao.message_dao import MessagesDAO
 from dao.reactions_dao import ReactionsDAO
 from dao.user_dao import UserDAO
+import json
 
 #Construct DAO Instance
 def mapAllMessages(row):
@@ -66,6 +67,34 @@ class MessageHandler(Resource):
             return jsonify(Messages= resultList)
         else:
             return jsonify("NOT FOUND"), 404
+
+class SendMessageHandler(Resource):
+    def post(self):
+       dao = MessagesDAO()
+       mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+       content = request.form['content']
+       hashtagCheck = str(content).split(' ')
+       for part in hashtagCheck:
+           if(part[0]=='#'):
+            dao.addHashtag(mid, part)
+
+       return {"msgId":mid}
+
+class sendReplyHandler(Resource):
+    def post(self):
+        dao = MessagesDAO()
+        mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+        content = request.form['content']
+        hashtagCheck = str(content).split(' ')
+        for part in hashtagCheck:
+           if(part[0]=='#'):
+            dao.addHashtag(mid, part)
+        
+        dao.sendReply(mid, request.form['msgid'])
+
+        return {"msgId":mid}
+
+        
         
     
 class MessageLikesHandler(Resource):
@@ -81,6 +110,20 @@ class MessageLikesHandler(Resource):
             return jsonify(Users= resultList)
         else:
             return jsonify("NOT FOUND"), 404
+class AddLikeHandler(Resource):
+    def post(self):
+        userid = request.form['userid']
+        msgid = request.form['msgid']
+        dao = MessagesDAO()
+        return dao.likeMessage(userid, msgid)
+class AddDislikeHandler(Resource):
+    def post(self):
+        userid = request.form['userid']
+        msgid = request.form['msgid']
+        dao = MessagesDAO()
+        return dao.dislikeMessage(userid, msgid)
+        
+        
 
 class MessageDislikesHandler(Resource):
     # Returns the users who like a message with a given ID.
@@ -143,11 +186,12 @@ class GroupMessageHandler(Resource):
 #Specific Message Handler that returns messages that corresponds 
 #to the given id in the current group chat
 class MessageByIdHandler(Resource):
-    def get(self, gName, id):
+    def get(self,id):
         dao = MessagesDAO()
-        result = dao.getMessage(gName, id) #Gets message that matches message id
+        print "Here",id
+        result = dao.getMessage(id) #Gets message that matches message id
         if(result):
-            return jsonify(Messages=result) #If not null returns the corresponding message
+            return jsonify(result) #If not null returns the corresponding message
         return {'Error' : "MESSAGE NOT FOUND"}, 404
         
 #This handler will change the reaction status of the message 

@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import jsonify
+from flask import jsonify, request
 from flask_restful import reqparse
 from dao.group_chat_dao import ChatDAO
 from dao.group_participants_dao import ParticipantsDao
@@ -56,6 +56,7 @@ class GroupHandler(Resource):
             return jsonify(Groups= resultList)
         else:
             return jsonify(Error="Not Found"),404
+    
 class JoinGroupHandler(Resource):
     def post(self, groupId, userId):
         dao = ChatDAO()
@@ -100,6 +101,16 @@ class GroupByOwnerHandler(Resource):
             return {"Error":"User does not owns a group"}
         
         return jsonify(Groups = result) ##returns all groups where user is the owner
+class CreateGroupHandler(Resource):
+    def post(self):
+        dao = ChatDAO()
+        dao.createGroup(request.form['groupName'], request.form['ownerId'])
+
+
+class RemoveUser(Resource):
+    def post(self, groupId, userId):
+        dao = ChatDAO()
+        return dao.removeUser(groupId, userId)
 
 #for /QuePasApp/groups/user/<int:userID>        
 class GroupParticipantsHandler(Resource):

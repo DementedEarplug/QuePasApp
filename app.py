@@ -19,6 +19,10 @@ def home():
 #returns every group
 api.add_resource(gHand.GroupHandler, '/QuePasApp/groups/') #done
 
+api.add_resource(gHand.CreateGroupHandler, '/QuePasApp/groups/new')
+
+api.add_resource(gHand.RemoveUser,  '/QuePasApp/groups/<int:groupId>/removeUser/<int:userId>')
+
 #return a single group
 api.add_resource(gHand.GroupByIndexHandler,'/QuePasApp/groups/<int:groupId>/') 
 

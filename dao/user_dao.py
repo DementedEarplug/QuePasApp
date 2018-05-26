@@ -17,6 +17,19 @@ class UserDAO:
             result.append(ror)
         return result
     
+    def getActiveUsers(self):
+        cursor = self.conn.cursor()
+        query = '''select postdate, count(distinct userid)
+        from users natural inner join messages
+        GROUP by postdate
+        order by postdate'''
+        cursor.execute(query)
+        result = []
+        for ror in cursor:
+            result.append(ror)
+        return result
+
+    
     def addUser(self, uName, uLName, username, passwd, phoneNumber, email):
         cursor = self.conn.cursor()
         q1 = "Select Case when (select count(*) from users where email = %s )>0 "

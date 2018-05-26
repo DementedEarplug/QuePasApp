@@ -20,7 +20,12 @@ def mapToDict(row):
     mappedUser['email'] = row[5]
     return mappedUser
 
-
+def mapActiveUsers(row):
+    result = []
+    mappedUser = {}
+    mappedUser['postdate'] = row[0]
+    mappedUser['count'] = row[1]
+    return mappedUser
 class UserHandler(Resource):
     #Returns all the users in the system
     def get(self):
@@ -39,6 +44,20 @@ class AddUserHandler(Resource):
         dao = UserDAO()
         resp = dao.addUser(request.form['name'], request.form['lastname'], request.form['username'], request.form['password'], request.form['phonenumber'], request.form['email'])
         return resp 
+
+class ActiveUsersHandler(Resource):
+    def get(self):
+        dao = UserDAO()
+        activeUsers = dao.getActiveUsers()
+        result = []
+        for row in activeUsers:
+            temp = mapActiveUsers(row)
+            result.append(temp)
+        if (len(result)!=0):
+            return jsonify(ActiveUsers= result)
+        else:
+            return jsonify("NOT FOUND"), 404
+        
 
 class UsersInGroupHandler(Resource):
     #Returns all the users in the system

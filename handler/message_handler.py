@@ -33,6 +33,14 @@ def mapToDict(row):
     # mappedMsg['postTime'] = str(row[5])
     return mappedMsg
 
+def mapMsgPerDay(row):
+    mappedMsg = {}
+    mappedMsg['postdate'] = row[0]
+    mappedMsg['count'] = row[1]
+    
+    return mappedMsg
+    
+
 def mapLikesToDiCt(row):
     mappedLikes = {}
     mappedLikes['likeId']= row[0]
@@ -67,6 +75,59 @@ class MessageHandler(Resource):
             return jsonify(Messages= resultList)
         else:
             return jsonify("NOT FOUND"), 404
+
+class MsgsPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        msgList = dao.getMsgsPerDay()
+        mesgsPerDay = []
+        for row in msgList:
+            result = mapMsgPerDay(row)
+            mesgsPerDay.append(result)
+        if (len(mesgsPerDay)!=0):
+            return jsonify(MessagesPerDay= mesgsPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class RepliesPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        msgList = dao.getRepliesPerDay()
+        repliesPerDay = []
+        for row in msgList:
+            result = mapMsgPerDay(row)
+            repliesPerDay.append(result)
+        if (len(repliesPerDay)!=0):
+            return jsonify(RepliesPerDay= repliesPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class LikesPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        likeList = dao.getLikesPerDay()
+        likessPerDay = []
+        for row in likeList:
+            result = mapMsgPerDay(row)
+            likessPerDay.append(result)
+        if (len(likessPerDay)!=0):
+            return jsonify(LikesPerDay= likessPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class DislikesPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        dislikeList = dao.getDislikesPerDay()
+        dislikessPerDay = []
+        for row in dislikeList:
+            result = mapMsgPerDay(row)
+            dislikessPerDay.append(result)
+        if (len(dislikessPerDay)!=0):
+            return jsonify(DislikesPerDay= dislikessPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
 
 class SendMessageHandler(Resource):
     def post(self):

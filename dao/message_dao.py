@@ -20,6 +20,52 @@ class MessagesDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def getMsgsPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select messages.postdate, count(*)
+        from messages
+        group by messages.postdate;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getLikesPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select m2.postdate, count(*)
+        from likes inner join messages m2 on likes.msgid = m2.msgid
+        group by m2.postdate;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getDislikesPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select m2.postdate, count(*)
+        from dislikes inner join messages m2 on dislikes.msgid = m2.msgid
+        group by m2.postdate;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
+    def getRepliesPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select messages.postdate, count(*)
+        from messages natural  inner join  replies
+        where messages.msgid = replies.msgid
+        group by messages.postdate'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
     def likeMessage(self, userid, msgid):
         cursor = self.conn.cursor()
         query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"

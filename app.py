@@ -90,6 +90,7 @@ api.add_resource(mHand.MessageSearchHandler, '/QuePasApp/groups/<string:gName>/m
 #Diplays all the users in a given group
 api.add_resource(uHand.UserHandler, '/QuePasApp/users/' )
 
+#resgisters a new user form the REST API
 api.add_resource(uHand.AddUserHandler, '/QuePasApp/users/new')
 
 #Searches users by given id
@@ -112,6 +113,32 @@ api.add_resource(uHand.UsersInGroupHandler, '/QuePasApp/groups/<int:groupId>/par
 
 # User login endpoint
 api.add_resource(uHand.UserLoginHandler, '/QuePasApp/login')
+
+
+#============================#
+#       Dashboard API        #
+#============================#
+
+#Data to generate Trending Hashtag
+api.add_resource(mHand.TrendingHashtagHandler, '/QuePasApp/DashBoard/trending' )
+
+#Data to generate msg per day chart
+api.add_resource(mHand.MsgsPerDayHandler, '/QuePasApp/DashBoard/messeagesPerDay' )
+
+# #Data to generate replies per day chart
+api.add_resource(mHand.RepliesPerDayHandler, '/QuePasApp/DashBoard/repliesPerDay' )
+
+# #Data to generate likes per day chart
+api.add_resource(mHand.LikesPerDayHandler, '/QuePasApp/DashBoard/likesPerDay' )
+
+# #Data to generate dislikes per day chart
+api.add_resource(mHand.DislikesPerDayHandler, '/QuePasApp/DashBoard/dislikesPerDay' )
+
+#Data to generate active users per day
+api.add_resource(uHand.ActiveUsersHandler, '/QuePasApp/DashBoard/ActiveUsersPerDay' )
+
+
+
 
 
 if(__name__=='__main__'):

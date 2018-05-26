@@ -20,6 +20,65 @@ class MessagesDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def getMsgsPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select messages.postdate, count(*)
+        from messages
+        group by messages.postdate;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
+    def getTrending(self):
+        cursor = self.conn.cursor()
+        query = '''select hashtagcontent, count(*) as count
+        from hashtags
+        group by hashtagcontent
+        order by count desc
+        limit 10;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getLikesPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select postdate, count(*)
+        from likes 
+        group by postdate;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getDislikesPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select postdate, count(*)
+        from dislikes 
+        group by postdate;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
+    def getRepliesPerDay(self):
+        cursor = self.conn.cursor()
+        query = '''select messages.postdate, count(*)
+        from messages natural  inner join  replies
+        where messages.msgid = replies.msgid
+        group by messages.postdate'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
     def likeMessage(self, userid, msgid):
         cursor = self.conn.cursor()
         query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"
@@ -43,6 +102,7 @@ class MessagesDAO:
                 return "Like removed from messages", 201
         else:
             return "User or message does not exist",404
+    
     def dislikeMessage(self, userid, msgid):
         cursor = self.conn.cursor()
         query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"
@@ -82,6 +142,7 @@ class MessagesDAO:
         cursor.execute(query,(groupId,))
         result = cursor.fetchall()
         return result
+
     def sendMessage(self, authorId, groupId, content):
         cursor = self.conn.cursor()
         fulldate = datetime.now()
@@ -92,11 +153,13 @@ class MessagesDAO:
         self.conn.commit()
         cursor.execute("Select msgid from messages where postdate = %s and posttime = %s", [postdate, posttime])
         return cursor.fetchone()[0]
+
     def sendReply(self, fromId, toId):
         cursor = self.conn.cursor()
         query = "Insert into replies(repliedtoid, msgid) values(%s, %s)"
         cursor.execute(query, [toId, fromId])
         self.conn.commit()
+
     def addHashtag(self, msgid, hashtag):
         query = "insert into hashtags (msgid, hashtagcontent) values(%s, %s)"
         cursor = self.conn.cursor()

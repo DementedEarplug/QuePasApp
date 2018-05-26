@@ -33,6 +33,20 @@ def mapToDict(row):
     # mappedMsg['postTime'] = str(row[5])
     return mappedMsg
 
+def mapMsgPerDay(row):
+    mappedMsg = {}
+    mappedMsg['postdate'] = row[0]
+    mappedMsg['count'] = row[1]
+    
+    return mappedMsg
+
+def mapHashTag(row):
+    mappedMsg = {}
+    mappedMsg['hashtagcontent'] = row[0]
+    mappedMsg['count'] = row[1]
+    
+    return mappedMsg
+
 def mapLikesToDiCt(row):
     mappedLikes = {}
     mappedLikes['likeId']= row[0]
@@ -46,6 +60,7 @@ def mapDislikesToDiCt(row):
     mappedDislikes['userId']= row[1]
     mappedDislikes['msgId']= row[2]
     return mappedDislikes
+
 
 #Function to map the result of a query into a dictionary.
 def mapUserToDict(row):
@@ -65,6 +80,71 @@ class MessageHandler(Resource):
             resultList.append(result)
         if (len(resultList)!=0):
             return jsonify(Messages= resultList)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class MsgsPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        msgList = dao.getMsgsPerDay()
+        mesgsPerDay = []
+        for row in msgList:
+            result = mapMsgPerDay(row)
+            mesgsPerDay.append(result)
+        if (len(mesgsPerDay)!=0):
+            return jsonify(MessagesPerDay= mesgsPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class RepliesPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        msgList = dao.getRepliesPerDay()
+        repliesPerDay = []
+        for row in msgList:
+            result = mapMsgPerDay(row)
+            repliesPerDay.append(result)
+        if (len(repliesPerDay)!=0):
+            return jsonify(RepliesPerDay= repliesPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class LikesPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        likeList = dao.getLikesPerDay()
+        likessPerDay = []
+        for row in likeList:
+            result = mapMsgPerDay(row)
+            likessPerDay.append(result)
+        if (len(likessPerDay)!=0):
+            return jsonify(LikesPerDay= likessPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class DislikesPerDayHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        dislikeList = dao.getDislikesPerDay()
+        dislikessPerDay = []
+        for row in dislikeList:
+            result = mapMsgPerDay(row)
+            dislikessPerDay.append(result)
+        if (len(dislikessPerDay)!=0):
+            return jsonify(DislikesPerDay= dislikessPerDay)
+        else:
+            return jsonify("NOT FOUND"), 404
+
+class TrendingHashtagHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        hashTags = dao.getTrending()
+        trending = []
+        for row in hashTags:
+            result = mapHashTag(row)
+            trending.append(result)
+        if (len(trending)!=0):
+            return jsonify(Trending= trending)
         else:
             return jsonify("NOT FOUND"), 404
 

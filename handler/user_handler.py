@@ -122,7 +122,7 @@ class GetByUsernameHandler(Resource):
 
 class ContactListHandler(Resource):
     #Gets the contact list of the user with userId = ownerId.
-     def get(self,ownerId):
+    def get(self,ownerId):
         userList = cDao.getAllContacts(ownerId)
         resultList = []
         for row in userList:
@@ -132,6 +132,12 @@ class ContactListHandler(Resource):
             return jsonify(Contacts= resultList)
         else:
             return jsonify("NOT FOUND"), 404
+    def post(self, ownerId):
+        result = cDao.addToContact(ownerId, request.form['userid']), 201
+        if(result.__contains__("Can't")):
+            return jsonify(result), 403
+        else:
+            return result, 201
         
 class UserLoginHandler(Resource):
     # Search a user with a given username.

@@ -39,7 +39,13 @@ def mapMsgPerDay(row):
     mappedMsg['count'] = row[1]
     
     return mappedMsg
+
+def mapHashTag(row):
+    mappedMsg = {}
+    mappedMsg['hashtagcontent'] = row[0]
+    mappedMsg['count'] = row[1]
     
+    return mappedMsg
 
 def mapLikesToDiCt(row):
     mappedLikes = {}
@@ -54,6 +60,7 @@ def mapDislikesToDiCt(row):
     mappedDislikes['userId']= row[1]
     mappedDislikes['msgId']= row[2]
     return mappedDislikes
+
 
 #Function to map the result of a query into a dictionary.
 def mapUserToDict(row):
@@ -128,6 +135,18 @@ class DislikesPerDayHandler(Resource):
         else:
             return jsonify("NOT FOUND"), 404
 
+class TrendingHashtagHandler(Resource):
+    def get(self):
+        dao = MessagesDAO()
+        hashTags = dao.getTrending()
+        trending = []
+        for row in hashTags:
+            result = mapHashTag(row)
+            trending.append(result)
+        if (len(trending)!=0):
+            return jsonify(Trending= trending)
+        else:
+            return jsonify("NOT FOUND"), 404
 
 class SendMessageHandler(Resource):
     def post(self):

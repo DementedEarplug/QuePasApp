@@ -118,6 +118,10 @@ api.add_resource(uHand.UserLoginHandler, '/QuePasApp/login')
 #============================#
 #       Dashboard API        #
 #============================#
+
+#Data to generate Trending Hashtag
+api.add_resource(mHand.TrendingHashtagHandler, '/QuePasApp/DashBoard/trending' )
+
 #Data to generate msg per day chart
 api.add_resource(mHand.MsgsPerDayHandler, '/QuePasApp/DashBoard/messeagesPerDay' )
 

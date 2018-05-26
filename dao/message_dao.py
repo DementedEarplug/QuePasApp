@@ -31,6 +31,19 @@ class MessagesDAO:
         for row in cursor:
             result.append(row)
         return result
+    
+    def getTrending(self):
+        cursor = self.conn.cursor()
+        query = '''select hashtagcontent, count(*) as count
+        from hashtags
+        group by hashtagcontent
+        order by count desc
+        limit 10;'''
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
 
     def getLikesPerDay(self):
         cursor = self.conn.cursor()

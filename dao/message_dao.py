@@ -29,8 +29,11 @@ class MessagesDAO:
             query = "select count(*) from likes where userid = %s and msgid = %s"
             cursor.execute(query, [userid, msgid])
             if(cursor.fetchone()[0]==0):
-                query = "insert into likes (userid, msgid) values(%s, %s)"
-                cursor.execute(query, [userid, msgid])
+                fulldate = datetime.now()
+                postdate = str(fulldate).split(' ')[0]
+                posttime = str(fulldate).split(' ')[1]
+                query = "insert into likes (userid, msgid, posttime, postdate) values(%s, %s, %s, %s)"
+                cursor.execute(query, [userid, msgid, posttime, postdate])
                 self.conn.commit()
                 return "Like Added to message", 201
             else:
@@ -49,8 +52,11 @@ class MessagesDAO:
             query = "select count(*) from dislikes where userid = %s and msgid = %s"
             cursor.execute(query, [userid, msgid])
             if(cursor.fetchone()[0]==0):
-                query = "insert into dislikes (userid, msgid) values(%s, %s)"
-                cursor.execute(query, [userid, msgid])
+                fulldate = datetime.now()
+                postdate = str(fulldate).split(' ')[0]
+                posttime = str(fulldate).split(' ')[1]
+                query = "insert into dislikes (userid, msgid, posttime, postdate) values(%s, %s, %s, %s)"
+                cursor.execute(query, [userid, msgid, posttime, postdate])
                 self.conn.commit()
                 return "Dislike Added to message", 201
             else:

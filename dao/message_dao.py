@@ -47,9 +47,9 @@ class MessagesDAO:
 
     def getLikesPerDay(self):
         cursor = self.conn.cursor()
-        query = '''select m2.postdate, count(*)
-        from likes inner join messages m2 on likes.msgid = m2.msgid
-        group by m2.postdate;'''
+        query = '''select postdate, count(*)
+        from likes 
+        group by postdate;'''
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -58,9 +58,9 @@ class MessagesDAO:
 
     def getDislikesPerDay(self):
         cursor = self.conn.cursor()
-        query = '''select m2.postdate, count(*)
-        from dislikes inner join messages m2 on dislikes.msgid = m2.msgid
-        group by m2.postdate;'''
+        query = '''select postdate, count(*)
+        from dislikes 
+        group by postdate;'''
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -99,6 +99,7 @@ class MessagesDAO:
                 return "Like removed from messages", 201
         else:
             return "User or message does not exist",404
+    
     def dislikeMessage(self, userid, msgid):
         cursor = self.conn.cursor()
         query = "select count(messages.msgid), count(users.userid) from users, messages where users.userid = %s and messages.msgid = %s"
@@ -135,6 +136,7 @@ class MessagesDAO:
         cursor.execute(query,(groupId,))
         result = cursor.fetchall()
         return result
+
     def sendMessage(self, authorId, groupId, content):
         cursor = self.conn.cursor()
         fulldate = datetime.now()
@@ -145,11 +147,13 @@ class MessagesDAO:
         self.conn.commit()
         cursor.execute("Select msgid from messages where postdate = %s and posttime = %s", [postdate, posttime])
         return cursor.fetchone()[0]
+
     def sendReply(self, fromId, toId):
         cursor = self.conn.cursor()
         query = "Insert into replies(repliedtoid, msgid) values(%s, %s)"
         cursor.execute(query, [toId, fromId])
         self.conn.commit()
+
     def addHashtag(self, msgid, hashtag):
         query = "insert into hashtags (msgid, hashtagcontent) values(%s, %s)"
         cursor = self.conn.cursor()

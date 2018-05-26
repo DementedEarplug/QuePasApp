@@ -26,20 +26,20 @@ class ContactlistDAO():
             result.append(ror)
         return result
     
-    def addToContact(self, userID, contactID):
+    def addToContact(self, userID, info):
         cursor = self.conn.cursor()
-        t1 = "with t1 as (select * from users where userid = %s),"
-        t2 =  "t2 as (select * from users where userid = %s),"
-        t3 = "t3 as (select count(*) as count from contactlist where ownerid = %s and contactid = %s)"
+        t1 = "with t1 as (select userid from users where userid = %s),"
+        t2 =  "t2 as (select userid from users where phonenumber = %s or email = %s),"
+        t3 = "t3 as (select count(*) as count from contactlist inner join users on contactid = userid where ownerid = %s and (email = %s or phonenumber = %s)) "
         t4 = "select t1.userid as owner, t2.userid as contact, t3.count from t1,t2,t3"
         query = t1+t2+t3+t4
-
-        cursor.execute(query, [userID, contactID, userID, contactID])
+        print(info)
+        cursor.execute(query, [userID, info['phone'], info['email'], userID, info['email'], info['phone']])
         result = cursor.fetchone()
         print(result)
         if(len(result)>0 and result[2]==0):
             query = 'insert into contactlist (ownerid, contactid) values(%s, %s)'
-            cursor.execute(query, [userID, contactID])
+            cursor.execute(query, [userID, result[1]])
             self.conn.commit()
             return 'Contact Added'
         else:

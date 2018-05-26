@@ -133,7 +133,10 @@ class ContactListHandler(Resource):
         else:
             return jsonify("NOT FOUND"), 404
     def post(self, ownerId):
-        result = cDao.addToContact(ownerId, request.form['userid']), 201
+        
+        info = {"phone":request.form['phone'] or 'None', "email":request.form['email'] or 'None'}
+        print(info['phone'])
+        result = cDao.addToContact(ownerId, info), 201
         if(result.__contains__("Can't")):
             return jsonify(result), 403
         else:

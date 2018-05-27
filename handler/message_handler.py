@@ -150,15 +150,18 @@ class TrendingHashtagHandler(Resource):
 
 class SendMessageHandler(Resource):
     def post(self):
-       dao = MessagesDAO()
-       mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
-       content = request.form['content']
-       hashtagCheck = str(content).split(' ')
-       for part in hashtagCheck:
-           if(part[0]=='#'):
-            dao.addHashtag(mid, part)
-
-       return {"msgId":mid}
+        dao = MessagesDAO()
+        mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+        content = request.form['content']
+        hashtagCheck = str(content).split(' ')
+        for part in hashtagCheck:
+            if(part[0]=='#'):
+                dao.addHashtag(mid, part)
+        print(mid)
+        result = []
+        for m in mid:
+            result.append(str(m))
+        return result,201
 
 class sendReplyHandler(Resource):
     def post(self):
@@ -168,11 +171,16 @@ class sendReplyHandler(Resource):
         hashtagCheck = str(content).split(' ')
         for part in hashtagCheck:
            if(part[0]=='#'):
-            dao.addHashtag(mid, part)
+                dao.addHashtag(mid[0], part)
         
         dao.sendReply(mid, request.form['msgid'])
-
-        return {"msgId":mid}
+        result = []
+        for m in mid:
+            result.append(str(m))
+        result[3] = str(True)
+        return result,201
+        # mid[3] = True
+        # return {"msgId":mid[0]}
 
         
         

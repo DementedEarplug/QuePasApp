@@ -148,22 +148,22 @@ class MessagesDAO:
         fulldate = datetime.now()
         postdate = str(fulldate).split(' ')[0]
         posttime = str(fulldate).split(' ')[1]
-        query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s)"
+        query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s) returning msgid, posttime, postdate, exists(select * from replies where replies.msgid = messages.msgid) as isReply"
         cursor.execute(query, [authorId, groupId, content, postdate, posttime])
         self.conn.commit()
-        cursor.execute("Select msgid from messages where postdate = %s and posttime = %s", [postdate, posttime])
-        return cursor.fetchone()[0]
+        result = cursor.fetchone()
+        return result
 
-    def sendReply(self, fromId, toId):
+    def sendReply(self, message, toId):
         cursor = self.conn.cursor()
         query = "Insert into replies(repliedtoid, msgid) values(%s, %s)"
-        cursor.execute(query, [toId, fromId])
+        cursor.execute(query, [toId, message[0]])
         self.conn.commit()
 
-    def addHashtag(self, msgid, hashtag):
+    def addHashtag(self, message, hashtag):
         query = "insert into hashtags (msgid, hashtagcontent) values(%s, %s)"
         cursor = self.conn.cursor()
-        cursor.execute(query,[msgid, hashtag])
+        cursor.execute(query,[message[0], hashtag])
         self.conn.commit()
 
         

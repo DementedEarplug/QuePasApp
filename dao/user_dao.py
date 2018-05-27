@@ -48,10 +48,11 @@ class UserDAO:
         elif(conflicts[2]=='yes'):
             return 'phonenumber is already registered', 403
         else:
-            query = 'insert into users (firstname, lastname, username, userpassword, phonenumber, email) values(%s, %s, %s, %s, %s, %s)'
+            query = 'insert into users (firstname, lastname, username, userpassword, phonenumber, email) values(%s, %s, %s, %s, %s, %s) returning userid'
             cursor.execute(query, [uName, uLName, username, passwd, phoneNumber, email])
             self.conn.commit()
-            return 'user created',201
+            result = cursor.fetchone()
+            return {"userId":result[0]},201
         # else:
         #     return 403
 

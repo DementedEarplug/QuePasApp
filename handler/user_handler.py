@@ -43,7 +43,7 @@ class AddUserHandler(Resource):
     def post(self):
         dao = UserDAO()
         resp = dao.addUser(request.form['name'], request.form['lastname'], request.form['username'], request.form['password'], request.form['phonenumber'], request.form['email'])
-        return resp 
+        return resp
 
 class ActiveUsersHandler(Resource):
     def get(self):

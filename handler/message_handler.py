@@ -29,8 +29,8 @@ def mapToDict(row):
     mappedMsg['dislikes'] = row[4]
     mappedMsg['isReply'] = row[5]
     mappedMsg['repliesTo'] = row[6]
-    # mappedMsg['postDate'] = str(row[4])
-    # mappedMsg['postTime'] = str(row[5])
+    mappedMsg['postDate'] = str(row[7])
+    mappedMsg['postTime'] = str(row[8])
     return mappedMsg
 
 def mapMsgPerDay(row):
@@ -150,35 +150,32 @@ class TrendingHashtagHandler(Resource):
 
 class SendMessageHandler(Resource):
     def post(self):
-        dao = MessagesDAO()
-        mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
-        content = request.form['content']
-        hashtagCheck = str(content).split(' ')
-        for part in hashtagCheck:
-            if(part[0]=='#'):
-                dao.addHashtag(mid, part)
-        print(mid)
-        result = []
-        for m in mid:
-            result.append(str(m))
-        return result,201
+       dao = MessagesDAO()
+       msg = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+       if(msg):
+           content = request.form['content']
+           hashtagCheck = str(content).split(' ')
+           for part in hashtagCheck:
+               if(part[0]=='#'):
+                   dao.addHashtag(msg[0], part)
+           msgDict = mapToDict(msg)
+           return jsonify(Message=msgDict)
+       return {"Internal Server Error" : "Message not sent"}, 500
 
 class sendReplyHandler(Resource):
     def post(self):
         dao = MessagesDAO()
-        mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
-        content = request.form['content']
-        hashtagCheck = str(content).split(' ')
-        for part in hashtagCheck:
-           if(part[0]=='#'):
-                dao.addHashtag(mid[0], part)
-        
-        dao.sendReply(mid, request.form['msgid'])
-        result = []
-        for m in mid:
-            result.append(str(m))
-        result[3] = str(True)
-        return result,201
+        msg = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
+        if(msg):
+            content = request.form['content']
+            hashtagCheck = str(content).split(' ')
+            for part in hashtagCheck:
+               if(part[0]=='#'):
+                    dao.addHashtag(msg[0], part)
+            msgDict = mapToDict(msg)
+            dao.sendReply(msgDict['msgId'], request.form['msgid'])
+            return jsonify(Message=msgDict)
+        return {"Internal Server Error" : "Message not sent"}, 500
         # mid[3] = True
         # return {"msgId":mid[0]}
 
@@ -197,20 +194,21 @@ class MessageLikesHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Users= resultList)
         else:
-            return jsonify("NOT FOUND"), 404
+            return jsonify("NOT FOUND")
 class AddLikeHandler(Resource):
     def post(self):
         userid = request.form['userid']
         msgid = request.form['msgid']
         dao = MessagesDAO()
-        return dao.likeMessage(userid, msgid)
+        result = dao.likeMessage(userid, msgid)
+        return jsonify(Result=result)
 class AddDislikeHandler(Resource):
     def post(self):
         userid = request.form['userid']
         msgid = request.form['msgid']
         dao = MessagesDAO()
-        return dao.dislikeMessage(userid, msgid)
-        
+        result = dao.dislikeMessage(userid, msgid)
+        return jsonify(Result=result)
         
 
 class MessageDislikesHandler(Resource):

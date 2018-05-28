@@ -94,14 +94,14 @@ class MessagesDAO:
                 query = "insert into likes (userid, msgid, posttime, postdate) values(%s, %s, %s, %s)"
                 cursor.execute(query, [userid, msgid, posttime, postdate])
                 self.conn.commit()
-                return "Like Added to message", 201
+                return "Like Added to message"
             else:
                 query = "delete from likes where userid = %s and msgid = %s"
                 cursor.execute(query, [userid, msgid])
                 self.conn.commit()
-                return "Like removed from messages", 201
+                return "Like removed from messages"
         else:
-            return "User or message does not exist",404
+            return "User or message does not exist"
     
     def dislikeMessage(self, userid, msgid):
         cursor = self.conn.cursor()
@@ -118,14 +118,14 @@ class MessagesDAO:
                 query = "insert into dislikes (userid, msgid, posttime, postdate) values(%s, %s, %s, %s)"
                 cursor.execute(query, [userid, msgid, posttime, postdate])
                 self.conn.commit()
-                return "Dislike Added to message", 201
+                return "Dislike Added to message"
             else:
                 query = "delete from dislikes where userid = %s and msgid = %s"
                 cursor.execute(query, [userid, msgid])
                 self.conn.commit()
-                return "Dislike removed from messages", 201
+                return "Dislike removed from messages"
         else:
-            return "User or message does not exist",404
+            return "User or message does not exist"
         
     #All messages corresponding to a group chat are retrieved 
     def getGroupMessages(self, groupId):    #Maybe add the posibility of IDing groupd by both name and ID.
@@ -135,9 +135,10 @@ class MessagesDAO:
         q3 = ' (select count(*) from dislikes where dislikes.msgId = messages.msgId) as dislikes,'
         q4 = ' (select exists(select msgid from replies where replies.msgid = messages.msgid)) as IsReply,'
         q5 = ' (select case when exists(select msgid from replies where replies.msgid = messages.msgid)'
-        q6 = ' then(select repliedtoid from replies where replies.msgid = messages.msgid) else null end) as repliesTo'
-        q7 = ' from messages natural inner join users natural inner join groups where groupId = %s;'
-        query = q1 + q2 + q3 + q4 + q5 + q6 + q7
+        q6 = ' then(select repliedtoid from replies where replies.msgid = messages.msgid) else null end) as repliesTo,'
+        q7 = ' postdate, posttime'
+        q8 = ' from messages natural inner join users natural inner join groups where groupId = %s;'
+        query = q1 + q2 + q3 + q4 + q5 + q6 + q7 + q8
         print(query)
         cursor.execute(query,(groupId,))
         result = cursor.fetchall()
@@ -148,16 +149,27 @@ class MessagesDAO:
         fulldate = datetime.now()
         postdate = str(fulldate).split(' ')[0]
         posttime = str(fulldate).split(' ')[1]
-        query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s) returning msgid, posttime, postdate, exists(select * from replies where replies.msgid = messages.msgid) as isReply"
+        query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s) returning *"
         cursor.execute(query, [authorId, groupId, content, postdate, posttime])
         self.conn.commit()
-        result = cursor.fetchone()
-        return result
+        message = cursor.fetchone()
+        q1 = ' select msgid, content, username, '
+        q2 = ' (select count(*) from likes where likes.msgId = messages.msgId) as likes,'
+        q3 = ' (select count(*) from dislikes where dislikes.msgId = messages.msgId) as dislikes,'
+        q4 = ' (select exists(select msgid from replies where replies.msgid = messages.msgid)) as IsReply,'
+        q5 = ' (select case when exists(select msgid from replies where replies.msgid = messages.msgid)'
+        q6 = ' then(select repliedtoid from replies where replies.msgid = messages.msgid) else null end) as repliesTo,'
+        q7 = ' postdate, posttime'
+        q8 = ' from messages natural inner join users natural inner join groups where groupId = %s and msgId = %s;'
+        query = q1 + q2 + q3 + q4 + q5 + q6 + q7 + q8
+        cursor.execute(query, [groupId, message[0]])
+        completeMessage = cursor.fetchone()
+        return completeMessage
 
     def sendReply(self, message, toId):
         cursor = self.conn.cursor()
         query = "Insert into replies(repliedtoid, msgid) values(%s, %s)"
-        cursor.execute(query, [toId, message[0]])
+        cursor.execute(query, [toId, message])
         self.conn.commit()
 
     def addHashtag(self, message, hashtag):

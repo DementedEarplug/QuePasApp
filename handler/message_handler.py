@@ -298,24 +298,24 @@ class MessageReactionHandler(Resource):
             return jsonify(Messages=message) #Message with new reaction is returned
         return {'Error' : "INTERNAL SERVER ERROR"}, 500
 
-#Text searches in a group chat's messages are performed
-class MessageSearchHandler(Resource):
-    def get(self, groupId):
-        containsText = []
-        text = request.args.get("text")
-        dao = MessagesDAO()
-        messages = dao.getGroupMessages(groupId)
-        resultList = []
-        for row in messages: 
-            resultList.append(mapToDict(row))
-        if(resultList):
-            for m in resultList:
-                if text in m['content']:
-                    containsText.append(m)
-            if(containsText):
-                return jsonify(Messages=containsText) #Message that contains text is returned
-            return {'Result' : "TEXT NOT FOUND"}, 204 #Text not found
-        return {'Error' : "INTERNAL SERVER ERROR"}, 500 
+# #Text searches in a group chat's messages are performed
+# class MessageSearchHandler(Resource):
+#     def get(self, groupId):
+#         containsText = []
+#         text = request.args.get("text")
+#         dao = MessagesDAO()
+#         messages = dao.getGroupMessages(groupId)
+#         resultList = []
+#         for row in messages: 
+#             resultList.append(mapToDict(row))
+#         if(resultList):
+#             for m in resultList:
+#                 if text in m['content']:
+#                     containsText.append(m)
+#             if(containsText):
+#                 return jsonify(Messages=containsText) #Message that contains text is returned
+#             return {'Result' : "TEXT NOT FOUND"}, 204 #Text not found
+#         return {'Error' : "INTERNAL SERVER ERROR"}, 500 
     
 #Text searches in a group chat's messages are performed
 class MessageSearchHandler(Resource):

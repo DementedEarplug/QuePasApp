@@ -81,7 +81,7 @@ class MessageHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Messages= resultList)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Eror", "Messages Not Found"}, 404
 
 class MsgsPerDayHandler(Resource):
     def get(self):
@@ -153,15 +153,16 @@ class SendMessageHandler(Resource):
         dao = MessagesDAO()
         mid = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
         content = request.form['content']
-        hashtagCheck = str(content).split(' ')
-        for part in hashtagCheck:
-            if(part[0]=='#'):
-                dao.addHashtag(mid, part)
-        print(mid)
-        result = []
-        for m in mid:
-            result.append(str(m))
-        return result,201
+        return mid
+        # hashtagCheck = str(content).split(' ')
+        # for part in hashtagCheck:
+        #     if(part[0]=='#'):
+        #         dao.addHashtag(mid, part)
+        # print(mid)
+        # result = []
+        # for m in mid:
+        #     result.append(str(m))
+        # return result,201
 
 class sendReplyHandler(Resource):
     def post(self):
@@ -276,7 +277,6 @@ class GroupMessageHandler(Resource):
 class MessageByIdHandler(Resource):
     def get(self,id):
         dao = MessagesDAO()
-        print "Here",id
         result = dao.getMessage(id) #Gets message that matches message id
         if(result):
             return jsonify(result) #If not null returns the corresponding message

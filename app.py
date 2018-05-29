@@ -17,10 +17,12 @@ def home():
 #          Chat API          #
 #============================#
 #returns every group
-api.add_resource(gHand.GroupHandler, '/QuePasApp/groups/') #done
-
+api.add_resource(gHand.GroupHandler, '/QuePasApp/groups/') 
+ 
+#Create a new group
 api.add_resource(gHand.CreateGroupHandler, '/QuePasApp/groups/new')
-
+ 
+#remove user from group
 api.add_resource(gHand.RemoveUser,  '/QuePasApp/groups/<int:groupId>/removeUser/<int:userId>')
 
 #return a single group

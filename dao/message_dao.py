@@ -148,11 +148,20 @@ class MessagesDAO:
         fulldate = datetime.now()
         postdate = str(fulldate).split(' ')[0]
         posttime = str(fulldate).split(' ')[1]
-        query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s) returning msgid, posttime, postdate, exists(select * from replies where replies.msgid = messages.msgid) as isReply"
-        cursor.execute(query, [authorId, groupId, content, postdate, posttime])
-        self.conn.commit()
-        result = cursor.fetchone()
-        return result
+        check = "select * from participants where userid = %s and groupid = %s"
+        cursor.execute(check,[authorId, groupId])
+        checkResult = cursor.fetchone()
+        if(checkResult):
+            query = "Insert into messages (userid, groupid, content, postdate, posttime) values(%s, %s, %s, %s, %s) returning msgid, posttime, postdate, exists(select * from replies where replies.msgid = messages.msgid) as isReply"
+            cursor.execute(query, [authorId, groupId, content, postdate, posttime])
+            self.conn.commit()
+            result = cursor.fetchone()
+            response = []
+            for r in result:
+                response.append(str(r))
+            return {'Message':response}
+        else:
+            return {'Error': 'User is not participant of group'}
 
     def sendReply(self, message, toId):
         cursor = self.conn.cursor()

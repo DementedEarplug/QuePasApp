@@ -144,5 +144,6 @@ api.add_resource(uHand.ActiveUsersHandler, '/QuePasApp/DashBoard/ActiveUsersPerD
 
 
 if(__name__=='__main__'):
-    app.run(debug = True, port = 8000)
+    app.run(debug = True, host="192.168.0.3", port = 8000)
+    #app.run(debug = True, port = 8000)
     

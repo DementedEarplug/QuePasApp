@@ -56,7 +56,7 @@ class UserDAO:
         # else:
         #     return 403
 
-    # Displays all the users in the system with their information.
+    # Displays all the users i    n the system with their information.
     def getAllUsersByChat(self, groupId):
         cursor = self.conn.cursor()
         query = 'select userId, FirstName, LastName, username, phoneNumber, email from users natural inner join participants where groupId = %s;'

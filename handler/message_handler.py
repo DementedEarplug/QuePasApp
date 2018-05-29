@@ -297,18 +297,37 @@ class MessageReactionHandler(Resource):
 
 #Text searches in a group chat's messages are performed
 class MessageSearchHandler(Resource):
-    def get(self, gName, text):
+    def get(self, groupId):
         containsText = []
+        text = request.args.get("text")
         dao = MessagesDAO()
-        messages = dao.getGroupMessages(gName)
-        if(messages):
-            for m in messages:
+        messages = dao.getGroupMessages(groupId)
+        resultList = []
+        for row in messages: 
+            resultList.append(mapToDict(row))
+        if(resultList):
+            for m in resultList:
                 if text in m['content']:
                     containsText.append(m)
             if(containsText):
                 return jsonify(Messages=containsText) #Message that contains text is returned
             return {'Result' : "TEXT NOT FOUND"}, 204 #Text not found
         return {'Error' : "INTERNAL SERVER ERROR"}, 500 
+    
+#Text searches in a group chat's messages are performed
+class MessageSearchHandler(Resource):
+    def get(self, groupId):
+        containsText = []
+        hashtag = "#" + request.args.get("hashtag")
+        print(hashtag)
+        dao = MessagesDAO()
+        messages = dao.searchHashTagGroupMessages(groupId, hashtag)
+        resultList = []
+        for row in messages: 
+            resultList.append(mapToDict(row))
+        if(resultList):
+            return jsonify(Messages=resultList) #Message that contains text is returned
+        return {'Messages' : "Hashtag not found"}, 404 #Text not found
 
 #Messages are posted in the corresponding group chat considering 
 #the content, writerID, and current time and date

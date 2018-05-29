@@ -81,7 +81,7 @@ class MessageHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Messages= resultList)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Eror", "Messages Not Found"}, 404
 
 class MsgsPerDayHandler(Resource):
     def get(self):
@@ -94,7 +94,7 @@ class MsgsPerDayHandler(Resource):
         if (len(mesgsPerDay)!=0):
             return jsonify(MessagesPerDay= mesgsPerDay)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error":"Not Found"}, 404
 
 class RepliesPerDayHandler(Resource):
     def get(self):
@@ -107,7 +107,7 @@ class RepliesPerDayHandler(Resource):
         if (len(repliesPerDay)!=0):
             return jsonify(RepliesPerDay= repliesPerDay)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error":"Not Found"}, 404
 
 class LikesPerDayHandler(Resource):
     def get(self):
@@ -120,7 +120,7 @@ class LikesPerDayHandler(Resource):
         if (len(likessPerDay)!=0):
             return jsonify(LikesPerDay= likessPerDay)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error":"Not Found"}, 404
 
 class DislikesPerDayHandler(Resource):
     def get(self):
@@ -133,7 +133,7 @@ class DislikesPerDayHandler(Resource):
         if (len(dislikessPerDay)!=0):
             return jsonify(DislikesPerDay= dislikessPerDay)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error":"Not Found"}, 404
 
 class TrendingHashtagHandler(Resource):
     def get(self):
@@ -146,38 +146,41 @@ class TrendingHashtagHandler(Resource):
         if (len(trending)!=0):
             return jsonify(Trending= trending)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error":"Not Found"}, 404
 
 class SendMessageHandler(Resource):
     def post(self):
        dao = MessagesDAO()
        msg = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
-       if(msg):
+       if(msg.keys().__contains__("Message")):
            content = request.form['content']
            hashtagCheck = str(content).split(' ')
            for part in hashtagCheck:
                if(part[0]=='#'):
-                   dao.addHashtag(msg[0], part)
-           msgDict = mapToDict(msg)
-           return jsonify(Message=msgDict)
+                   dao.addHashtag(msg["Message"][0], part)
+           msgDict = mapToDict(msg["Message"])
+           return {"Message":msgDict},201
+       elif(msg.keys().__contains__("Error")):
+            return msg,403
        return {"Internal Server Error" : "Message not sent"}, 500
 
-class sendReplyHandler(Resource):
+class SendReplyHandler(Resource):
+
     def post(self):
         dao = MessagesDAO()
         msg = dao.sendMessage(request.form['authorId'], request.form['groupId'], request.form['content'])
-        if(msg):
+        if(msg.keys().__contains__("Message")):
             content = request.form['content']
             hashtagCheck = str(content).split(' ')
             for part in hashtagCheck:
                if(part[0]=='#'):
-                    dao.addHashtag(msg[0], part)
-            msgDict = mapToDict(msg)
+                    dao.addHashtag(msg["Message"][0], part)
+            msgDict = mapToDict(msg["Message"])
             dao.sendReply(msgDict['msgId'], request.form['msgid'])
-            return jsonify(Message=msgDict)
+            return {"Message":msgDict},201
+        elif(msg.keys().__contains__("Error")):
+            return msg,403
         return {"Internal Server Error" : "Message not sent"}, 500
-        # mid[3] = True
-        # return {"msgId":mid[0]}
 
         
         
@@ -194,7 +197,8 @@ class MessageLikesHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Users= resultList)
         else:
-            return jsonify("NOT FOUND")
+            return {"Error":"NOT FOUND"},404
+
 class AddLikeHandler(Resource):
     def post(self):
         userid = request.form['userid']
@@ -224,14 +228,14 @@ class MessageDislikesHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Users= resultList)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error":"NOT FOUND"}, 404
 
 class MessageLikeCountHandler(Resource):
     def get(self,msgId):
         rDao = ReactionsDAO()
         count = rDao.getMsgLikesCount(msgId)
         if not count:
-            return jsonify(Error="Not Found"),404
+            return {"Error":"Message Not Found"},404
         else:
             return jsonify(Likes= count)
 
@@ -254,9 +258,9 @@ class GroupMessageHandler(Resource):
             result = mapToDict(row)
             resultList.append(result)
         if (len(resultList)!=0):
-            return jsonify(Messages= resultList)
+            return {"Messages": resultList}
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error":"Group Messages Not Found"}, 404
 
     def post(self, gName):
         dao = MessagesDAO()
@@ -274,7 +278,6 @@ class GroupMessageHandler(Resource):
 class MessageByIdHandler(Resource):
     def get(self,id):
         dao = MessagesDAO()
-        print "Here",id
         result = dao.getMessage(id) #Gets message that matches message id
         if(result):
             return jsonify(result) #If not null returns the corresponding message
@@ -346,13 +349,7 @@ class MessagePostHandler(Resource):
 class MessageCountHandler(Resource):
     def get(self):
         dao = MessagesDAO()
-        result = dao.getAllMessages()
-        if(result):
-            count = 0
-            for g in result:
-                for m in g:
-                    count = count + 1
-            return jsonify(Count=count)
-        return {'Error' : "INTERNAL SERVER ERROR"}, 500
+        result = dao.getNumberOfMessages()
+        return result
 ##RepliesHandler
 ##get message id, check that id on replies table, return reply object (replyID, messageID, respondsToID)

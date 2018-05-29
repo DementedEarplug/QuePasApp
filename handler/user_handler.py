@@ -38,7 +38,7 @@ class UserHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Users= resultList)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error": " Not Found"}, 404
 class AddUserHandler(Resource):
     def post(self):
         dao = UserDAO()
@@ -56,7 +56,7 @@ class ActiveUsersHandler(Resource):
         if (len(result)!=0):
             return jsonify(ActiveUsers= result)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error": " Not Found"}, 404
         
 
 class UsersInGroupHandler(Resource):
@@ -71,18 +71,20 @@ class UsersInGroupHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Users= resultList)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error": "Not Found"}, 404
 
 class UserByIdHandler(Resource):
     # Returns info of a user with a given ID
     def get(self, userId):
         dao = UserDAO()
         row = dao.getUserById(userId)
-        if not row:
-            return jsonify(Error="User with id: %s not gound"%userId),404
-        else:
+        # print(row)
+        if(row):
             user= mapToDict(row)
             return jsonify(User= user)
+        else:
+            return {"Error": "User Not Found"}, 404
+            
 
 class UserByNameHandler(Resource):
     # Search a user with a given firstname.
@@ -90,10 +92,13 @@ class UserByNameHandler(Resource):
         dao = UserDAO()
         row = dao.searchByName(uFirstName)
         if not row:
-            return jsonify(Error="User with First Name: %s not found"%uFirstName),404
+            return {"Error": "User Not Found"}, 404
         else:
-            user= mapToDict(row)
-            return jsonify(User= user)
+            userList = []
+            for u in row:
+                user= mapToDict(u)
+                userList.append(user)
+            return jsonify(User= userList)
 
     
 
@@ -103,10 +108,13 @@ class UserByLastNameHandler(Resource):
         dao = UserDAO()
         row = dao.searchByLName(uLastname)
         if not row:
-            return jsonify(Error="User with Last Name: %s not found"%uLastname),404
+            return {"Error": "User Not Found"}, 404
         else:
-            user= mapToDict(row)
-            return jsonify(User= user)
+            userList = []
+            for u in row:
+                user= mapToDict(u)
+                userList.append(user)
+            return jsonify(User= userList)
 
 class GetByUsernameHandler(Resource):
     # Search a user with a given username.
@@ -114,7 +122,7 @@ class GetByUsernameHandler(Resource):
         dao = UserDAO()
         row = dao.searchByUsername(username)
         if not row:
-            return jsonify(Error="User with username: %s not found"%username),404
+            return {"Error": " User Not Found"}, 404
         else:
             user= mapToDict(row)
             return jsonify(User= user)
@@ -131,16 +139,16 @@ class ContactListHandler(Resource):
         if (len(resultList)!=0):
             return jsonify(Contacts= resultList)
         else:
-            return jsonify("NOT FOUND"), 404
+            return {"Error": " Not Found"}, 404
     def post(self, ownerId):
         
         info = {"phone":request.form['phone'] or 'None', "email":request.form['email'] or 'None'}
         print(info['phone'])
         result = cDao.addToContact(ownerId, info), 201
         if(result.__contains__("Can't")):
-            return jsonify(result), 403
+            return {"Error":result}, 404
         else:
-            return result, 201
+            return {"Message":result}, 201
         
 class UserLoginHandler(Resource):
     # Search a user with a given username.

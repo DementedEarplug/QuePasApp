@@ -30,28 +30,28 @@ class ChatDAO:
 
     def removeUser(self, groupid, userid):
         cursor = self.conn.cursor()
-        #check if user exists and if its admin of group
+        #check if user exists and if he is admin of group
         q1 = "select case when "
-        q2 = "(select count(*) from groups where ownerid = %s and groupid = %s)>0 "
+        q2 = "(select count(*) from groups where ownerid = %s and groupid = %s)>0 " #check if is owner
         q3 = "then 'yes' else 'no' end, "
-        q4 = "case when (select count(*) from participants where userid = %s and groupid = %s)>0 "
-        q5 = "then 'yes' else 'no' end from users where userid = %s"
+        q4 = "case when (select count(*) from participants where userid = %s and groupid = %s)>0 " #check if is participant
+        q5 = "then 'yes' else 'no' end from users where userid = %s" #check if user exsists
         query = q1+q2+q3+q4+q5
         cursor.execute(query, [userid,groupid, userid, groupid, userid])
         checkUser = cursor.fetchone()
         print(checkUser)
-        if(len(checkUser)>0 and checkUser[0]=='no' and checkUser[1]=='yes'):
+        if(checkUser and checkUser[0]=='no' and checkUser[1]=='yes'):
             query = 'delete from participants where groupid = %s and userid = %s'
             cursor.execute(query,[groupid, userid])
             self.conn.commit()
-            return "Participant removed from group",204
-        elif (len(checkUser)==0):
-            return 'User does not exists', 404
+            return {"Message" :"Participant removed from group"},204
+        elif (not checkUser):
+            return {"Error":'User does not exists'}, 404
         elif (checkUser[0]=='yes'):
-            return 'can remove admin from his group',403
+            return {"Error":"can't remove admin from his group"},403
         elif (checkUser[1]=='no'):
-            return 'User is not participant of group', 403
-            return 'Well, this is weird'
+            return {"Error":'User is not participant of group'}, 403
+        return {'Error':'Well, this is weird'},404
 
     def createGroup(self, name, ownerId):
         cursor = self.conn.cursor()
@@ -59,45 +59,36 @@ class ChatDAO:
         query = "select * from users where userid = %s"
         cursor.execute(query, [ownerId])
         checkUser = cursor.fetchone()
-        if(len(checkUser)>0):
+        if(checkUser):
             query = "with result as (Insert into groups (groupname, ownerid) values(%s, %s) returning groupid) select groupid from result"
             cursor.execute(query, [name, ownerId])
             groupid = cursor.fetchone()[0]
             self.conn.commit()
-            result = {'groupId':groupid}
+            result = {"Message":"Group Created",'groupId':groupid}
+            self.addUserToGroup(ownerId, groupid)
             return result, 201
         else:
-            return 'User not found', 404
+            return {"Error":"User not found"}, 404
 
 
     def getGroupsByUserID(self, userId):
         cursor = self.conn.cursor()
-        query = "select groupId, groupName, ownerId from groups natural inner join participants natural inner join users where userId = %s;"
+        query = "select groupId, groupName, ownerId from users natural inner join participants natural inner join groups where userid = %s"
         cursor.execute(query,(userId,))
+        groups = cursor.fetchall()
         result = []
-        for row in cursor:
+        for row in groups:
             result.append(row)
         return result
-
-
-    def getUserGroups(self, userID):
+    def getGroupsByAdminID(self, userId):
+        cursor = self.conn.cursor()
+        query = "select groupId, groupName, ownerId from groups inner join users on userid = ownerId where ownerId = %s;"
+        cursor.execute(query,(userId,))
+        groups = cursor.fetchall()
         result = []
-        groups = self.getGroups() #Get all groups
-        for group in groups:
-            gpar = participants[groups[group]['id']] #get participants of group
-            if userID in gpar: #When user is participant of group
-                result.append(group)
+        for row in groups:
+            result.append(row)
         return result
-
-
-    def addGroup(self, id, name, userID):
-        group1={'id':id,'name':name,'userID':userID}
-        for g in self.data:
-            if g['id']==id:
-                return {}
-        self.data.append(group1)
-        print(self.data)
-        return group1
 
     # Get all groups in the system
     def getGroups(self):

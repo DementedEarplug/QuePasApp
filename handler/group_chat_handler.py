@@ -33,14 +33,8 @@ def mapOwnertoDict(row):
 
 def isInList(uid): ##checks if user exists in udao
     udao = UserDAO()
-    users = udao.getAllUsers()
-    isInList = False
-    
-    #Check if is in list
-    for u in users:
-        if uid == u['IdUser']:
-            isInList = True
-    return isInList
+    user = udao.getUserById(uid)
+    return user
 
 ## for /QuePasApp/groups route
 # Finds all groups in the system.
@@ -53,16 +47,16 @@ class GroupHandler(Resource):
             result = mapToDict(row)
             resultList.append(result)
         if(len(resultList)!=0):
-            return jsonify(Groups= resultList)
+            return {"Groups":groupList},200
         else:
-            return jsonify(Error="Not Found"),404
+            return {"Error":"No Groups Created yet"},404
     
 class JoinGroupHandler(Resource):
     def post(self, groupId, userId):
         dao = ChatDAO()
         resp = dao.addUserToGroup(userId, groupId)
         if resp==201:
-            return jsonify(Message = "User added to group")
+            return {"Message":"User added to group","User Id":userId, "Group Id":groupId}
         else:
             return jsonify(Message="User Already Member of group")
 
@@ -72,7 +66,7 @@ class GroupByIndexHandler(Resource):
         dao = ChatDAO()
         row = dao.getGroupByID(groupId)
         if not row:
-            return jsonify(Error="User with id: %s not gound"%groupId),404
+            return {"Error":"Group not found"},404
         else:
             group= mapToDict(row)
             return jsonify(Group= group)
@@ -84,29 +78,30 @@ class GroupByIndexHandler(Resource):
 
 #for /QuePasApp/groups/user/<int:userID>        
 class GroupByOwnerHandler(Resource):
-    def get(self, userID): #get groups by user id
+    def get(self, userId): #get groups by user id
         dao = ChatDAO()
 
-        inList = isInList(userID)
+        inList = isInList(userId)
         ##if not in list end
         if not(inList):
             #print('Here')
             return {"Error":"User not found"}, 404
         
         ##get groups by owner
-        result = dao.getGroupsByUserID(userID)
+        result = dao.getGroupsByAdminID(userId)
         
         ##if user does not owns a group
         if(len(result) == 0):
-            return {"Error":"User does not owns a group"}
+            return {"Error":"User is not member of any group"}
         
         return jsonify(Groups = result) ##returns all groups where user is the owner
+#for /QuePasApp/groups/new
 class CreateGroupHandler(Resource):
     def post(self):
         dao = ChatDAO()
-        dao.createGroup(request.form['groupName'], request.form['ownerId'])
+        return dao.createGroup(request.form['groupName'], request.form['ownerId'])
 
-
+# for /QuePasApp/groups/<int:groupId>/removeUser/<int:userId>
 class RemoveUser(Resource):
     def post(self, groupId, userId):
         dao = ChatDAO()
@@ -130,12 +125,6 @@ class GroupParticipantsHandler(Resource):
 class UserGroupsHandler(Resource): #Get all groups where user is participant
     def get(self, userId):
         dao = ChatDAO()
-        #inList = isInList(userId)
-        #if not in list end
-        #if not(inList):
-            #print 'Here'
-        #    return {"Error":"User not found"}, 404
-
         result = dao.getGroupsByUserID(userId)
         if(len(result) == 0):
             return {"Error":"User does not belongs to any group"}, 404
@@ -151,7 +140,7 @@ class GroupOwnerHandler(Resource): #Get owner of group
 
         groups = dao.getGroupOwner(groupId)
         if not groups: #dao.getgroupbyis to test if the group exists.
-            return jsonify(Error="Group with id: %s not found"%groupId),404
+            return {"Error":"Group Not Found"},404
         else:
             resultList=[]
             for row in groups:

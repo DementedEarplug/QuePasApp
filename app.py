@@ -17,10 +17,12 @@ def home():
 #          Chat API          #
 #============================#
 #returns every group
-api.add_resource(gHand.GroupHandler, '/QuePasApp/groups/') #done
-
+api.add_resource(gHand.GroupHandler, '/QuePasApp/groups/') 
+ 
+#Create a new group
 api.add_resource(gHand.CreateGroupHandler, '/QuePasApp/groups/new')
-
+ 
+#remove user from group
 api.add_resource(gHand.RemoveUser,  '/QuePasApp/groups/<int:groupId>/removeUser/<int:userId>')
 
 #return a single group
@@ -47,7 +49,7 @@ api.add_resource(mHand.MessageHandler, '/QuePasApp/messages/all')
 
 api.add_resource(mHand.SendMessageHandler, '/QuePasApp/messages/send')
 
-api.add_resource(mHand.sendReplyHandler, '/QuePasApp/messages/sendReply')
+api.add_resource(mHand.SendReplyHandler, '/QuePasApp/messages/sendReply')
 
 #Returns count of all messages
 api.add_resource(mHand.MessageCountHandler, '/QuePasApp/messages/count/')
@@ -142,6 +144,6 @@ api.add_resource(uHand.ActiveUsersHandler, '/QuePasApp/DashBoard/ActiveUsersPerD
 
 
 if(__name__=='__main__'):
-    app.run(debug = True, host="192.168.0.3", port = 8000)
+    app.run(debug = True, port = 8000)
     #app.run(debug = True, port = 8000)
     

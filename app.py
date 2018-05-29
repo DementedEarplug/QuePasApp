@@ -80,7 +80,7 @@ api.add_resource(mHand.MessageDislikeCountHandler, '/QuePasApp/messages/<int:msg
 api.add_resource(mHand.MessageReactionHandler, '/QuePasApp/groups/<string:gName>/messages/<int:id>')
 
 #Searches for a message that contains the text specified
-api.add_resource(mHand.MessageSearchHandler, '/QuePasApp/groups/<string:gName>/messages/<string:text>/')
+api.add_resource(mHand.MessageSearchHandler, '/QuePasApp/groups/<int:groupId>/messages/search')
 
 #Gets message count in total 
 
@@ -144,6 +144,6 @@ api.add_resource(uHand.ActiveUsersHandler, '/QuePasApp/DashBoard/ActiveUsersPerD
 
 
 if(__name__=='__main__'):
+    #app.run(debug = True, host='192.168.0.3', port = 8000)
     app.run(debug = True, port = 8000)
-    #app.run(debug = True, port = 8000)
     

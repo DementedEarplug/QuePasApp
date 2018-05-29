@@ -142,6 +142,22 @@ class MessagesDAO:
         cursor.execute(query,(groupId,))
         result = cursor.fetchall()
         return result
+    
+    def searchHashTagGroupMessages(self, groupId, hashtag):    #Maybe add the posibility of IDing groupd by both name and ID.
+        cursor = self.conn.cursor()
+        q1 = ' select msgid, content, username,'
+        q2 = ' (select count(*) from likes where likes.msgId = messages.msgId) as likes,'
+        q3 = ' (select count(*) from dislikes where dislikes.msgId = messages.msgId) as dislikes,'
+        q4 = ' (select exists(select msgid from replies where replies.msgid = messages.msgid)) as IsReply,'
+        q5 = ' (select case when exists(select msgid from replies where replies.msgid = messages.msgid)'
+        q6 = ' then(select repliedtoid from replies where replies.msgid = messages.msgid) else null end) as repliesTo,'
+        q7 = ' postdate, posttime'
+        q8 = ' from messages natural inner join users natural inner join groups natural inner join hashtags where groupId = %s and hashtagcontent = %s;'
+        query = q1 + q2 + q3 + q4 + q5 + q6 + q7 + q8
+        print(query)
+        cursor.execute(query,(groupId, hashtag,))
+        result = cursor.fetchall()
+        return result
 
     def sendMessage(self, authorId, groupId, content):
         cursor = self.conn.cursor()

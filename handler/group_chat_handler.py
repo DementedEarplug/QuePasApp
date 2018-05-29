@@ -56,9 +56,11 @@ class JoinGroupHandler(Resource):
         dao = ChatDAO()
         resp = dao.addUserToGroup(userId, groupId)
         if resp==201:
-            return {"Message":"User added to group","User Id":userId, "Group Id":groupId}
+            return {"Message":"User added to group","User Id":userId, "Group Id":groupId}, resp
+        elif(resp == 403):
+            return {"Error":"User Already Member of group"}, resp
         else:
-            return jsonify(Message="User Already Member of group")
+            return {"Error": "User or Group Not Found"}, resp
 
 #for /QuePasApp/groups/<int:id>
 class GroupByIndexHandler(Resource):

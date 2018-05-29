@@ -17,16 +17,23 @@ class ChatDAO:
         return result
     def addUserToGroup(self, uid, gid):
         cursor = self.conn.cursor()
-        query = "select count(*) from participants where userid = %s and groupid = %s"
-        cursor.execute(query, [uid, gid])
-        if(cursor.fetchone()[0]==0): #if user is not in group yet
+        query = '''select
+        case when (select count(*) from groups where groupid = %s)>0 then 'yes' else 'no' end,
+        case when (select count(*) from users where userid = %s)>0 then 'yes' else 'no' end, count(*)
+        from participants where userid = %s and groupid = %s;
+        '''
+        cursor.execute(query, [gid,uid,uid, gid])
+        result = cursor.fetchone()
+        if(result[2]==0 and result[0]=='yes' and result[1]=='yes'): #if user is not in group yet
 
             query = "Insert into participants (userid, groupid) Values(%s, %s)"
             cursor.execute(query, [uid, gid])
             self.conn.commit()
             return 201
-        else:
+        elif(result[2]>0):
             return 403
+        elif(result[0]=='no' or result[1]=='no'):
+            return 404
 
     def removeUser(self, groupid, userid):
         cursor = self.conn.cursor()
@@ -104,13 +111,6 @@ class ChatDAO:
         group = self.getGroupByID(id)
         group['name'] = name
         return group
-
-    def deleteGroupByID(self, id):
-        index = -1
-        for i in range(0,len(self.data)):
-            if(id==self.data[i]['id']):
-                index = i
-        return self.data.pop(index)
         
     def getGroupOwner(self, groupId):
         cursor = self.conn.cursor()

@@ -107,7 +107,7 @@ api.add_resource(uHand.UserByLastNameHandler, '/QuePasApp/users/lastname/<string
 #Searches a user by a given username
 api.add_resource(uHand.GetByUsernameHandler,'/QuePasApp/users/username/<string:username>/')
 
-#Displays contact list of a user with a given ID
+#Displays contact list of a user with a given ID and adds contacts to the list
 api.add_resource(uHand.ContactListHandler, '/QuePasApp/users/<int:ownerId>/contactlist')
 
 # Displays every participants of a group

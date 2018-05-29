@@ -141,12 +141,11 @@ class ContactListHandler(Resource):
         else:
             return {"Error": " Not Found"}, 404
     def post(self, ownerId):
-        
         info = {"phone":request.form['phone'] or 'None', "email":request.form['email'] or 'None'}
-        print(info['phone'])
-        result = cDao.addToContact(ownerId, info), 201
+        print(request.form)
+        result = cDao.addToContact(ownerId, info)
         if(result.__contains__("Can't")):
-            return {"Error":result}, 404
+            return {"Error":result}, 404 #Either user does not exist, con
         else:
             return {"Message":result}, 201
         
